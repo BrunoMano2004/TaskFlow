@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Rodar" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="TaskFlow_api.TaskFlow_api.TaskFlowApiApplication" />
+    <module name="TaskFlow-api" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

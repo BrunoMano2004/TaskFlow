@@ -1,11 +1,13 @@
 package TaskFlow_api.TaskFlow_api.model;
 
 import TaskFlow_api.TaskFlow_api.dto.CadastroUsuarioDto;
+import TaskFlow_api.TaskFlow_api.exception.InvalidDataException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.net.PasswordAuthentication;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -78,12 +80,24 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(CadastroUsuarioDto usuarioDto) throws ParseException {
+    public Usuario(String email, String nomeCompleto, Date dataNascimento, String imgPerfil) {
+        this.email = email;
+        this.nomeCompleto = nomeCompleto;
+        this.dataNascimento = dataNascimento;
+        this.temaEscuro = false;
+        this.imgPerfil = imgPerfil;
+    }
+
+    public Usuario(CadastroUsuarioDto usuarioDto) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
         this.email = usuarioDto.email();
         this.nomeCompleto = usuarioDto.nomeCompleto();
-        this.dataNascimento = sdf.parse(usuarioDto.dataNascimento());
         this.imgPerfil = usuarioDto.imgPerfil();
+        try {
+            this.dataNascimento = sdf.parse(usuarioDto.dataNascimento());
+        } catch (ParseException ex){
+            throw new InvalidDataException("Data está no formato errado!");
+        }
     }
 }
