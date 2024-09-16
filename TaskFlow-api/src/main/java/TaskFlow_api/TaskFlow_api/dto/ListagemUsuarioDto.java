@@ -2,12 +2,12 @@ package TaskFlow_api.TaskFlow_api.dto;
 
 import TaskFlow_api.TaskFlow_api.model.Usuario;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public record ListagemUsuarioDto(
         String email,
         String nomeCompleto,
-        Date dataNascimento,
+        LocalDate dataNascimento,
         String imgPerfil
 ) {
     public ListagemUsuarioDto(Usuario usuario){

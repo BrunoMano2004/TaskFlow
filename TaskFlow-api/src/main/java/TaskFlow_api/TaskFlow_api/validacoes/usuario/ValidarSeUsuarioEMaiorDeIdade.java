@@ -15,14 +15,13 @@ public class ValidarSeUsuarioEMaiorDeIdade implements ValidacoesUsuario{
 
     @Override
     public void validar(CadastroUsuarioDto cadastroUsuarioDto) {
-        Date data = new Date();
+        LocalDate dataAtual = LocalDate.now();
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate localDate = LocalDate.parse(cadastroUsuarioDto.dataNascimento(), formato);
-        Date dataNascimento = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        LocalDate dataNascimento = LocalDate.parse(cadastroUsuarioDto.dataNascimento(), formato);
 
-        if (dataNascimento.after(data)){
+        if (dataNascimento.isAfter(dataAtual)){
             throw new InvalidDataException("Data de nascimento não deve ser maior do que a data atual!");
-        } else if ((data.getYear() - dataNascimento.getYear()) < 12) {
+        } else if ((dataAtual.getYear() - dataNascimento.getYear()) < 12) {
             throw new InvalidDataException("A idade mínima para utilização é de 12 anos!");
         }
     }

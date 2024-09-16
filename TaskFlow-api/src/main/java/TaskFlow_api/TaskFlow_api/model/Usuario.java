@@ -6,11 +6,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.net.PasswordAuthentication;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 public class Usuario {
@@ -23,7 +27,7 @@ public class Usuario {
 
     private String nomeCompleto;
 
-    private Date dataNascimento;
+    private LocalDate dataNascimento;
 
     private boolean temaEscuro;
 
@@ -53,11 +57,11 @@ public class Usuario {
         this.nomeCompleto = nomeCompleto;
     }
 
-    public Date getDataNascimento() {
+    public LocalDate getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(Date dataNascimento) {
+    public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 
@@ -77,10 +81,23 @@ public class Usuario {
         this.imgPerfil = imgPerfil;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        return temaEscuro == usuario.temaEscuro && Objects.equals(id, usuario.id) && Objects.equals(email, usuario.email) && Objects.equals(nomeCompleto, usuario.nomeCompleto) && Objects.equals(dataNascimento, usuario.dataNascimento) && Objects.equals(imgPerfil, usuario.imgPerfil);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, nomeCompleto, dataNascimento, temaEscuro, imgPerfil);
+    }
+
     public Usuario() {
     }
 
-    public Usuario(String email, String nomeCompleto, Date dataNascimento, String imgPerfil) {
+    public Usuario(String email, String nomeCompleto, LocalDate dataNascimento, String imgPerfil) {
         this.email = email;
         this.nomeCompleto = nomeCompleto;
         this.dataNascimento = dataNascimento;
@@ -89,15 +106,12 @@ public class Usuario {
     }
 
     public Usuario(CadastroUsuarioDto usuarioDto) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         this.email = usuarioDto.email();
         this.nomeCompleto = usuarioDto.nomeCompleto();
         this.imgPerfil = usuarioDto.imgPerfil();
-        try {
-            this.dataNascimento = sdf.parse(usuarioDto.dataNascimento());
-        } catch (ParseException ex){
-            throw new InvalidDataException("Data está no formato errado!");
-        }
+        this.dataNascimento = LocalDate.parse(usuarioDto.dataNascimento(), sdf);
+        this.temaEscuro = false;
     }
 }

@@ -29,9 +29,10 @@ public class UsuarioService {
         return new ListagemUsuarioDto(usuario);
     }
 
-    public void cadastrarUsuario(@Valid CadastroUsuarioDto cadastroUsuario) {
+    public void cadastrarUsuario(CadastroUsuarioDto cadastroUsuario) {
         validacoes.forEach(v -> v.validar(cadastroUsuario));
 
         usuarioRepository.save(new Usuario(cadastroUsuario));
     }
+
 }
