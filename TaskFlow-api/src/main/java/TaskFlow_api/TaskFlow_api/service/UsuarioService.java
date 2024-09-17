@@ -1,5 +1,6 @@
 package TaskFlow_api.TaskFlow_api.service;
 
+import TaskFlow_api.TaskFlow_api.dto.AtualizacaoUsuarioDto;
 import TaskFlow_api.TaskFlow_api.dto.CadastroUsuarioDto;
 import TaskFlow_api.TaskFlow_api.dto.ListagemUsuarioDto;
 import TaskFlow_api.TaskFlow_api.exception.ResourceNotFoundException;
@@ -20,7 +21,7 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
-    private List<ValidacoesUsuario> validacoes;
+    private List<ValidacoesUsuario> validacoesCadastro;
 
     public ListagemUsuarioDto retornarUsuario(String email){
         Usuario usuario = usuarioRepository.findByEmail(email)
@@ -30,9 +31,19 @@ public class UsuarioService {
     }
 
     public void cadastrarUsuario(CadastroUsuarioDto cadastroUsuario) {
-        validacoes.forEach(v -> v.validar(cadastroUsuario));
+        validacoesCadastro.forEach(v -> v.validar(cadastroUsuario));
 
         usuarioRepository.save(new Usuario(cadastroUsuario));
     }
 
+    public ListagemUsuarioDto atualizarUsuario(String email, AtualizacaoUsuarioDto atualizacaoUsuario) {
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
+
+
+
+        usuario.atualizarUsuario(atualizacaoUsuario);
+
+        return new ListagemUsuarioDto(usuario);
+    }
 }

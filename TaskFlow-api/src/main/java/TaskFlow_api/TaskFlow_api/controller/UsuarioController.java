@@ -1,5 +1,6 @@
 package TaskFlow_api.TaskFlow_api.controller;
 
+import TaskFlow_api.TaskFlow_api.dto.AtualizacaoUsuarioDto;
 import TaskFlow_api.TaskFlow_api.dto.CadastroUsuarioDto;
 import TaskFlow_api.TaskFlow_api.dto.ListagemUsuarioDto;
 import TaskFlow_api.TaskFlow_api.service.UsuarioService;
@@ -28,5 +29,14 @@ public class UsuarioController {
     public ResponseEntity<String> cadastrarUsuario(@RequestBody @Valid CadastroUsuarioDto cadastroUsuario){
         usuarioService.cadastrarUsuario(cadastroUsuario);
         return new ResponseEntity<>("Usuário criado com sucesso!", HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/{email}")
+    @Transactional
+    public ResponseEntity<ListagemUsuarioDto> atualizarUsuario(@PathVariable String email,
+                                                               @RequestBody @Valid AtualizacaoUsuarioDto atualizacaoUsuario){
+        ListagemUsuarioDto listagemUsuario = usuarioService.atualizarUsuario(email, atualizacaoUsuario);
+
+        return new ResponseEntity<>(listagemUsuario, HttpStatus.OK);
     }
 }

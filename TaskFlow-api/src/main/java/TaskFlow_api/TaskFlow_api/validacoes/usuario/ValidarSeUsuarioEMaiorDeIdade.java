@@ -4,14 +4,11 @@ import TaskFlow_api.TaskFlow_api.dto.CadastroUsuarioDto;
 import TaskFlow_api.TaskFlow_api.exception.InvalidDataException;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 @Component
-public class ValidarSeUsuarioEMaiorDeIdade implements ValidacoesUsuario{
+public class ValidarSeUsuarioEMaiorDeIdade implements ValidacoesUsuario<CadastroUsuarioDto>{
 
     @Override
     public void validar(CadastroUsuarioDto cadastroUsuarioDto) {

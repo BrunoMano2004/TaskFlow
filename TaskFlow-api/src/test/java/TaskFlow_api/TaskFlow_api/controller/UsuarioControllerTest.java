@@ -1,6 +1,8 @@
 package TaskFlow_api.TaskFlow_api.controller;
 
+import TaskFlow_api.TaskFlow_api.dto.CadastroUsuarioDto;
 import TaskFlow_api.TaskFlow_api.dto.ListagemUsuarioDto;
+import TaskFlow_api.TaskFlow_api.exception.ResourceNotFoundException;
 import TaskFlow_api.TaskFlow_api.model.Usuario;
 import TaskFlow_api.TaskFlow_api.service.UsuarioService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,10 +16,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -52,5 +57,110 @@ class UsuarioControllerTest {
 
     }
 
+    @Test
+    void deveriaRetornarErro404() throws Exception {
 
+        when(usuarioService.retornarUsuario(anyString())).thenThrow(new ResourceNotFoundException("Usuário não encontrado!"));
+
+        mvc.perform(get("/usuario/{email}", "brunomano2004@gmail.com")
+                        .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isNotFound());
+    }
+
+    @Test
+    void deveriaRetornarCreated() throws Exception {
+        CadastroUsuarioDto cadastroUsuarioDto = new CadastroUsuarioDto(
+                "usuario@usuario.com",
+                "Usuario Usuario",
+                "10/10/2000",
+                "imagem"
+        );
+
+        ObjectMapper om = new ObjectMapper();
+        String json = om.writeValueAsString(cadastroUsuarioDto);
+
+        mvc.perform(post("/usuario")
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(content().string("Usuário criado com sucesso!"))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    void deveriaRetornarErro400AoInserirEmailNoFormatoIncorreto() throws Exception {
+        CadastroUsuarioDto cadastroUsuarioDto = new CadastroUsuarioDto(
+                "usuariousuario.com",
+                "Usuario Usuario",
+                "10/10/2000",
+                "imagem"
+        );
+
+        List<TratamentoErroBeanValidation> listaErros = new ArrayList<>();
+        TratamentoErroBeanValidation erroDto = new TratamentoErroBeanValidation("email", "O email deve estar no formato correto! email@email.com");
+        listaErros.add(erroDto);
+
+        ObjectMapper om = new ObjectMapper();
+        String json = om.writeValueAsString(cadastroUsuarioDto);
+        String json1 = om.writeValueAsString(listaErros);
+
+        mvc.perform(post("/usuario")
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(content().json(json1))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void deveriaRetornarErro400AoDeixarEmailEmBranco() throws Exception {
+        CadastroUsuarioDto cadastroUsuarioDto = new CadastroUsuarioDto(
+                "",
+                "Usuario Usuario",
+                "10/10/2000",
+                "imagem"
+        );
+
+        List<TratamentoErroBeanValidation> listaErros = new ArrayList<>();
+        TratamentoErroBeanValidation erroDto = new TratamentoErroBeanValidation("email", "Email não deve estar vazio!");
+        listaErros.add(erroDto);
+
+        ObjectMapper om = new ObjectMapper();
+        String json = om.writeValueAsString(cadastroUsuarioDto);
+        String json1 = om.writeValueAsString(listaErros);
+
+        mvc.perform(post("/usuario")
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(content().json(json1))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void deveriaRetornarErro400AoDeixarDataNoFormatoErrado() throws Exception {
+        CadastroUsuarioDto cadastroUsuarioDto = new CadastroUsuarioDto(
+                "email@email.com",
+                "Usuario Usuario",
+                "1mfrg",
+                "imagem"
+        );
+
+        List<TratamentoErroBeanValidation> listaErros = new ArrayList<>();
+        TratamentoErroBeanValidation erroDto = new TratamentoErroBeanValidation("dataNascimento", "Data deve seguir o formato correto! DD/MM/YYYY");
+        listaErros.add(erroDto);
+
+        ObjectMapper om = new ObjectMapper();
+        String json = om.writeValueAsString(cadastroUsuarioDto);
+        String json1 = om.writeValueAsString(listaErros);
+
+        mvc.perform(post("/usuario")
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(content().json(json1))
+                .andExpect(status().isBadRequest());
+    }
+
+    public record TratamentoErroBeanValidation(
+            String campo,
+            String mensagem
+    ){
+    }
 }

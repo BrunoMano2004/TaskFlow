@@ -1,5 +1,6 @@
 package TaskFlow_api.TaskFlow_api.model;
 
+import TaskFlow_api.TaskFlow_api.dto.AtualizacaoUsuarioDto;
 import TaskFlow_api.TaskFlow_api.dto.CadastroUsuarioDto;
 import TaskFlow_api.TaskFlow_api.exception.InvalidDataException;
 import jakarta.persistence.Entity;
@@ -13,6 +14,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.Objects;
 
@@ -113,5 +115,24 @@ public class Usuario {
         this.imgPerfil = usuarioDto.imgPerfil();
         this.dataNascimento = LocalDate.parse(usuarioDto.dataNascimento(), sdf);
         this.temaEscuro = false;
+    }
+
+    public void atualizarUsuario(AtualizacaoUsuarioDto atualizacaoUsuario){
+        if (!(atualizacaoUsuario.email().isBlank())){
+            this.email = atualizacaoUsuario.email();
+        }
+        if (!(atualizacaoUsuario.nomeCompleto().isBlank())){
+            this.nomeCompleto = atualizacaoUsuario.nomeCompleto();
+        }
+        if (!(atualizacaoUsuario.dataNascimento().isBlank())){
+            try {
+                this.dataNascimento = LocalDate.parse(atualizacaoUsuario.dataNascimento());
+            } catch (DateTimeParseException e) {
+                throw new InvalidDataException("Data digitada está incorreta!");
+            }
+        }
+        if (!(atualizacaoUsuario.imgPerfil().isBlank())){
+            this.email = atualizacaoUsuario.imgPerfil();
+        }
     }
 }

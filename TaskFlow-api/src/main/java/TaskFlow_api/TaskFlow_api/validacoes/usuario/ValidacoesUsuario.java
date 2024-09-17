@@ -4,7 +4,7 @@ import TaskFlow_api.TaskFlow_api.dto.CadastroUsuarioDto;
 import org.springframework.stereotype.Component;
 
 @Component
-public interface ValidacoesUsuario {
+public interface ValidacoesUsuario<T> {
 
-    public void validar(CadastroUsuarioDto cadastroUsuarioDto);
+    public void validar(T o);
 }
