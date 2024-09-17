@@ -21,7 +21,10 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
-    private List<ValidacoesUsuario> validacoesCadastro;
+    private List<ValidacoesUsuario<CadastroUsuarioDto>> validacoesUsuarioCadastro;
+
+    @Autowired
+    private List<ValidacoesUsuario<AtualizacaoUsuarioDto>> validacoesUsuarioAtualizacao;
 
     public ListagemUsuarioDto retornarUsuario(String email){
         Usuario usuario = usuarioRepository.findByEmail(email)
@@ -31,7 +34,7 @@ public class UsuarioService {
     }
 
     public void cadastrarUsuario(CadastroUsuarioDto cadastroUsuario) {
-        validacoesCadastro.forEach(v -> v.validar(cadastroUsuario));
+        validacoesUsuarioCadastro.forEach(v -> v.validar(cadastroUsuario));
 
         usuarioRepository.save(new Usuario(cadastroUsuario));
     }
@@ -40,7 +43,7 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
 
-
+        validacoesUsuarioAtualizacao.forEach(v -> v.validar(atualizacaoUsuario));
 
         usuario.atualizarUsuario(atualizacaoUsuario);
 

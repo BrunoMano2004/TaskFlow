@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Component
-public class ValidarSeUsuarioEMaiorDeIdade implements ValidacoesUsuario<CadastroUsuarioDto>{
+public class ValidarCadastroSeUsuarioEMaiorDeIdade implements ValidacoesUsuario<CadastroUsuarioDto>{
 
     @Override
     public void validar(CadastroUsuarioDto cadastroUsuarioDto) {

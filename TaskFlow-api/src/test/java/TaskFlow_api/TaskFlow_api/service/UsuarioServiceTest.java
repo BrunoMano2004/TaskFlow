@@ -1,5 +1,6 @@
 package TaskFlow_api.TaskFlow_api.service;
 
+import TaskFlow_api.TaskFlow_api.dto.AtualizacaoUsuarioDto;
 import TaskFlow_api.TaskFlow_api.dto.CadastroUsuarioDto;
 import TaskFlow_api.TaskFlow_api.dto.ListagemUsuarioDto;
 import TaskFlow_api.TaskFlow_api.exception.ResourceNotFoundException;
@@ -35,10 +36,13 @@ class UsuarioServiceTest {
     private ArgumentCaptor<Usuario> usuarioCaptor;
 
     @Spy
-    private List<ValidacoesUsuario> validacoes = new ArrayList<>();
+    private List<ValidacoesUsuario<CadastroUsuarioDto>> validacoesUsuariosCadastro = new ArrayList<>();
+
+    @Spy
+    private List<ValidacoesUsuario<AtualizacaoUsuarioDto>> validacoesUsuariosAtualizacao = new ArrayList<>();
 
     @Test
-    public void deveriaRetornarUmUsuario(){
+    void deveriaRetornarUmUsuario(){
         Usuario usuario = new Usuario("email@email.com", "Usuario", LocalDate.now(), "imagem");
         ListagemUsuarioDto usuarioDto = new ListagemUsuarioDto(usuario);
         when(usuarioRepository.findByEmail(anyString())).thenReturn(Optional.of(usuario));
@@ -49,7 +53,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    public void naoDeveriaLancarExcecao(){
+    void naoDeveriaLancarExcecao(){
         Usuario usuario = new Usuario("email@email.com", "Usuario", LocalDate.now(), "imagem");
         ListagemUsuarioDto usuarioDto = new ListagemUsuarioDto(usuario);
         when(usuarioRepository.findByEmail(anyString())).thenReturn(Optional.of(usuario));
@@ -60,7 +64,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    public void deveriaLancarExcecao(){
+    void deveriaLancarExcecao(){
         when(usuarioRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> {
@@ -69,7 +73,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    public void deveriaChamarMetodoSalvar(){
+    void deveriaChamarMetodoSalvar(){
         CadastroUsuarioDto cadastroUsuario = new CadastroUsuarioDto(
                 "email@email.com",
                 "Usuario usuario",
@@ -83,5 +87,33 @@ class UsuarioServiceTest {
         then(usuarioRepository).should().save(usuarioCaptor.capture());
         Usuario usuario1 = usuarioCaptor.getValue();
         assertEquals(usuario, usuario1);
+    }
+
+    @Test
+    void deveriaAlterarDadosDoUsuario(){
+        AtualizacaoUsuarioDto atualizacaoUsuario = new AtualizacaoUsuarioDto(
+                "email@gmail.com",
+                "Usuario",
+                "10/10/2004",
+                "imagem"
+        );
+
+        CadastroUsuarioDto cadastroUsuario = new CadastroUsuarioDto(
+                "email@email.com",
+                "Usuario Usuario",
+                "10/10/2000",
+                "imagem"
+        );
+
+        Usuario usuario = new Usuario(cadastroUsuario);
+
+        when(usuarioRepository.findByEmail(anyString())).thenReturn(Optional.of(usuario));
+
+        usuario.atualizarUsuario(atualizacaoUsuario);
+        ListagemUsuarioDto listagemUsuarioAtualizado = new ListagemUsuarioDto(usuario);
+
+        ListagemUsuarioDto listagemUsuario = usuarioService.atualizarUsuario("email@email.com", atualizacaoUsuario);
+
+        assertEquals(listagemUsuarioAtualizado, listagemUsuario);
     }
 }
