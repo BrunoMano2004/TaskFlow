@@ -37,6 +37,11 @@ public class ExceptionHandles {
         return new ResponseEntity<>(erros, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(UrlNotValidException.class)
+    public ResponseEntity<String> tratarUrlInvalida(UrlNotValidException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     public record ErroBeanValidation(
             String campo,
             String mensagem
