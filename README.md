@@ -21,6 +21,14 @@
 - **Swagger/OpenAPI**: Documentação da API.
 - **JUnit/Mockito**: Testes unitários e de integração.
 
+## Documentação
+
+**Swagger** - A API está totalmente documentada via Swagger, com cada endpoint comentado com sua descrição. Para acessar, basta rodar o projeto e acessar o link:
+
+```bash
+localhost:8080/swagger-ui
+```
+
 ## Instalação
 
 1. **Clone o repositório:**
