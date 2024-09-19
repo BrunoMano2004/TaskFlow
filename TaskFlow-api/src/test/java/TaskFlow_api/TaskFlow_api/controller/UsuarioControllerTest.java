@@ -1,12 +1,11 @@
 package TaskFlow_api.TaskFlow_api.controller;
 
-import TaskFlow_api.TaskFlow_api.dto.AtualizacaoUsuarioDto;
-import TaskFlow_api.TaskFlow_api.dto.CadastroUsuarioDto;
-import TaskFlow_api.TaskFlow_api.dto.ListagemUsuarioDto;
+import TaskFlow_api.TaskFlow_api.dto.usuario.AtualizacaoUsuarioDto;
+import TaskFlow_api.TaskFlow_api.dto.usuario.CadastroUsuarioDto;
+import TaskFlow_api.TaskFlow_api.dto.usuario.ListagemUsuarioDto;
 import TaskFlow_api.TaskFlow_api.exception.ResourceNotFoundException;
 import TaskFlow_api.TaskFlow_api.model.Usuario;
 import TaskFlow_api.TaskFlow_api.service.UsuarioService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

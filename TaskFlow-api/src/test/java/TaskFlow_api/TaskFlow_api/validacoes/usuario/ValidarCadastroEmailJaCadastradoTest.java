@@ -1,7 +1,6 @@
 package TaskFlow_api.TaskFlow_api.validacoes.usuario;
 
-import TaskFlow_api.TaskFlow_api.dto.AtualizacaoUsuarioDto;
-import TaskFlow_api.TaskFlow_api.dto.CadastroUsuarioDto;
+import TaskFlow_api.TaskFlow_api.dto.usuario.CadastroUsuarioDto;
 import TaskFlow_api.TaskFlow_api.exception.DataAlreadyExistException;
 import TaskFlow_api.TaskFlow_api.model.Usuario;
 import TaskFlow_api.TaskFlow_api.repository.UsuarioRepository;

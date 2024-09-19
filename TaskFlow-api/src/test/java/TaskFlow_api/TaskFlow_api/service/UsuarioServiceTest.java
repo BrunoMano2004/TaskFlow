@@ -1,8 +1,8 @@
 package TaskFlow_api.TaskFlow_api.service;
 
-import TaskFlow_api.TaskFlow_api.dto.AtualizacaoUsuarioDto;
-import TaskFlow_api.TaskFlow_api.dto.CadastroUsuarioDto;
-import TaskFlow_api.TaskFlow_api.dto.ListagemUsuarioDto;
+import TaskFlow_api.TaskFlow_api.dto.usuario.AtualizacaoUsuarioDto;
+import TaskFlow_api.TaskFlow_api.dto.usuario.CadastroUsuarioDto;
+import TaskFlow_api.TaskFlow_api.dto.usuario.ListagemUsuarioDto;
 import TaskFlow_api.TaskFlow_api.exception.ResourceNotFoundException;
 import TaskFlow_api.TaskFlow_api.model.Usuario;
 import TaskFlow_api.TaskFlow_api.repository.UsuarioRepository;
@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 

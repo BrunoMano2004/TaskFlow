@@ -1,15 +1,11 @@
 package TaskFlow_api.TaskFlow_api.validacoes.usuario;
 
-import TaskFlow_api.TaskFlow_api.dto.CadastroUsuarioDto;
+import TaskFlow_api.TaskFlow_api.dto.usuario.CadastroUsuarioDto;
 import TaskFlow_api.TaskFlow_api.exception.InvalidDataException;
-import TaskFlow_api.TaskFlow_api.model.Usuario;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

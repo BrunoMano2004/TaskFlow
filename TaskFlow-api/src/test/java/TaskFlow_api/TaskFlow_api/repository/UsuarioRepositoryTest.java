@@ -1,6 +1,6 @@
 package TaskFlow_api.TaskFlow_api.repository;
 
-import TaskFlow_api.TaskFlow_api.dto.CadastroUsuarioDto;
+import TaskFlow_api.TaskFlow_api.dto.usuario.CadastroUsuarioDto;
 import TaskFlow_api.TaskFlow_api.model.Usuario;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package TaskFlow_api.TaskFlow_api.validacoes.usuario;
 
-import TaskFlow_api.TaskFlow_api.dto.CadastroUsuarioDto;
+import TaskFlow_api.TaskFlow_api.dto.usuario.CadastroUsuarioDto;
 import TaskFlow_api.TaskFlow_api.exception.InvalidDataException;
 import org.springframework.stereotype.Component;
 

@@ -1,14 +1,9 @@
 package TaskFlow_api.TaskFlow_api.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import TaskFlow_api.TaskFlow_api.dto.etiqueta.AtualizacaoEtiquetaDto;
+import TaskFlow_api.TaskFlow_api.dto.etiqueta.CadastroEtiquetaDto;
+import jakarta.persistence.*;
 
 @Entity
 public class Etiqueta {
@@ -20,6 +15,36 @@ public class Etiqueta {
     private String nome;
 
     private String cor;
+
+    @JoinColumn(name = "id_usuario")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Usuario usuario;
+
+    public Etiqueta() {
+    }
+
+    public Etiqueta(String nome, String cor, Usuario usuario) {
+        this.nome = nome;
+        this.cor = cor;
+        this.usuario = usuario;
+    }
+
+    public Etiqueta(CadastroEtiquetaDto cadastroEtiqueta, Usuario usuario) {
+        this.nome = cadastroEtiqueta.nome();
+        this.cor = cadastroEtiqueta.cor();
+        this.usuario = usuario;
+    }
+
+    public void atualizar(AtualizacaoEtiquetaDto atualizacaoEtiqueta){
+
+        if (!(atualizacaoEtiqueta.nome().isBlank())){
+            this.nome = atualizacaoEtiqueta.nome();
+        }
+
+        if (!(atualizacaoEtiqueta.cor().isBlank())){
+            this.nome = atualizacaoEtiqueta.cor();
+        }
+    }
 
     public Long getId() {
         return id;
@@ -43,5 +68,13 @@ public class Etiqueta {
 
     public void setCor(String cor) {
         this.cor = cor;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

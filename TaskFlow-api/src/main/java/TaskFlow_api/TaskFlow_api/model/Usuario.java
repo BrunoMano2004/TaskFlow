@@ -1,21 +1,16 @@
 package TaskFlow_api.TaskFlow_api.model;
 
-import TaskFlow_api.TaskFlow_api.dto.AtualizacaoUsuarioDto;
-import TaskFlow_api.TaskFlow_api.dto.CadastroUsuarioDto;
+import TaskFlow_api.TaskFlow_api.dto.usuario.AtualizacaoUsuarioDto;
+import TaskFlow_api.TaskFlow_api.dto.usuario.CadastroUsuarioDto;
 import TaskFlow_api.TaskFlow_api.exception.InvalidDataException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.net.PasswordAuthentication;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
 import java.util.Objects;
 
 @Entity
