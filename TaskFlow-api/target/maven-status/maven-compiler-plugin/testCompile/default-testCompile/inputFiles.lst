@@ -1,0 +1,13 @@
+C:\Users\bruno.tfonseca\Desktop\TaskFlow\TaskFlow-api\src\test\java\TaskFlow_api\TaskFlow_api\controller\EtiquetaControllerTest.java
+C:\Users\bruno.tfonseca\Desktop\TaskFlow\TaskFlow-api\src\test\java\TaskFlow_api\TaskFlow_api\controller\UsuarioControllerTest.java
+C:\Users\bruno.tfonseca\Desktop\TaskFlow\TaskFlow-api\src\test\java\TaskFlow_api\TaskFlow_api\repository\EtiquetaRepositoryTest.java
+C:\Users\bruno.tfonseca\Desktop\TaskFlow\TaskFlow-api\src\test\java\TaskFlow_api\TaskFlow_api\repository\UsuarioRepositoryTest.java
+C:\Users\bruno.tfonseca\Desktop\TaskFlow\TaskFlow-api\src\test\java\TaskFlow_api\TaskFlow_api\service\EtiquetaServiceTest.java
+C:\Users\bruno.tfonseca\Desktop\TaskFlow\TaskFlow-api\src\test\java\TaskFlow_api\TaskFlow_api\service\UsuarioServiceTest.java
+C:\Users\bruno.tfonseca\Desktop\TaskFlow\TaskFlow-api\src\test\java\TaskFlow_api\TaskFlow_api\TaskFlowApiApplicationTests.java
+C:\Users\bruno.tfonseca\Desktop\TaskFlow\TaskFlow-api\src\test\java\TaskFlow_api\TaskFlow_api\validacoes\usuario\ValidarAtualizacaoEmailJaCadastradoTest.java
+C:\Users\bruno.tfonseca\Desktop\TaskFlow\TaskFlow-api\src\test\java\TaskFlow_api\TaskFlow_api\validacoes\usuario\ValidarAtualizacaoSeLinkEValidoTest.java
+C:\Users\bruno.tfonseca\Desktop\TaskFlow\TaskFlow-api\src\test\java\TaskFlow_api\TaskFlow_api\validacoes\usuario\ValidarAtualizacaoSeUsuarioEMaiorDeIdadeTest.java
+C:\Users\bruno.tfonseca\Desktop\TaskFlow\TaskFlow-api\src\test\java\TaskFlow_api\TaskFlow_api\validacoes\usuario\ValidarCadastroEmailJaCadastradoTest.java
+C:\Users\bruno.tfonseca\Desktop\TaskFlow\TaskFlow-api\src\test\java\TaskFlow_api\TaskFlow_api\validacoes\usuario\ValidarCadastroSeLinkEValidoTest.java
+C:\Users\bruno.tfonseca\Desktop\TaskFlow\TaskFlow-api\src\test\java\TaskFlow_api\TaskFlow_api\validacoes\usuario\ValidarCadastroSeUsuarioEMaiorDeIdadeTest.java

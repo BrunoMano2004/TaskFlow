@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: TaskFlow_api.TaskFlow_api.repository.UsuarioRepositoryTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.030 s -- in TaskFlow_api.TaskFlow_api.repository.UsuarioRepositoryTest

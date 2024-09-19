@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/etiqueta")
 public class EtiquetaController {
@@ -32,5 +34,19 @@ public class EtiquetaController {
                                                                      @PathVariable String emailUsuario){
         ListagemEtiquetaDto listagemEtiqueta = etiquetaService.buscarEtiqueta(nomeEtiqueta, emailUsuario);
         return ResponseEntity.ok(listagemEtiqueta);
+    }
+
+    @Operation(summary = "Retorna lista de etiquetas", description = "Retorna a lista de etiquetas que um usuário possui", responses = {
+            @ApiResponse(responseCode = "200",
+                        description = "Retorna lista de etiquetas, mesmo estando vazia",
+                        content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404",
+                        description = "Usuário não encontrado",
+                        content = @Content(mediaType = "Application/json"))
+    })
+    @GetMapping("/{emailUsuario}")
+    public ResponseEntity<List<ListagemEtiquetaDto>> listarTodasEtiquetasPorUsuario(@PathVariable String emailUsuario){
+        List<ListagemEtiquetaDto> listaEtiquetas = etiquetaService.retornarTodasEtiquetasPorUsuario(emailUsuario);
+        return ResponseEntity.ok(listaEtiquetas);
     }
 }

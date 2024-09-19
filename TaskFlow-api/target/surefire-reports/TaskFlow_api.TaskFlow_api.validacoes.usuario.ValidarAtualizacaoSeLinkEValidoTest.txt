@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: TaskFlow_api.TaskFlow_api.validacoes.usuario.ValidarAtualizacaoSeLinkEValidoTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.637 s -- in TaskFlow_api.TaskFlow_api.validacoes.usuario.ValidarAtualizacaoSeLinkEValidoTest
