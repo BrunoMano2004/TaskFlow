@@ -68,10 +68,10 @@ public class EtiquetaController {
         return new ResponseEntity<>("Usuario criado com sucesso!", HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/etiqueta/{idEtiqueta}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/etiqueta/delete/{idEtiqueta}")
     @Transactional
     public ResponseEntity<String> deletarEtiqueta(@PathVariable Long idEtiqueta){
         etiquetaService.excluirEtiqueta(idEtiqueta);
-        return new ResponseEntity<>("Etiqueta deletada com sucesso!", HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }

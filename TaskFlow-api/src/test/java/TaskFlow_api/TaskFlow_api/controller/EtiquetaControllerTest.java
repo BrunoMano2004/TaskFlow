@@ -187,12 +187,12 @@ class EtiquetaControllerTest {
     @Test
     void deveriaRetornarErro404ComEtiquetaInexistenteNaExclusaoDaEtiqueta() throws Exception{
 
-        doThrow(new ResourceNotFoundException("Usuário não encontrado!"))
-                .when(etiquetaService).excluirEtiqueta(etiqueta.getId());
+        doThrow(new ResourceNotFoundException("Etiqueta não encontrado!"))
+                .when(etiquetaService).excluirEtiqueta(1L);
 
-        mvc.perform(delete("/etiqueta/{idEtiqueta}")
+        mvc.perform(delete("/etiqueta/delete/{idEtiqueta}", 1L)
                 ).andExpect(status().isNotFound())
-                .andExpect(content().string("Usuário não encontrado!"));
+                .andExpect(content().string("Etiqueta não encontrado!"));
     }
 
     public record TratamentoErroBeanValidation(
