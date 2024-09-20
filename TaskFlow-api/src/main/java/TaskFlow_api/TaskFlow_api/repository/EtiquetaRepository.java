@@ -13,5 +13,6 @@ public interface EtiquetaRepository extends JpaRepository<Etiqueta, Long> {
     @Query("SELECT e FROM Etiqueta e JOIN e.usuario u WHERE e.nome LIKE CONCAT('%', :nomeEtiqueta, '%') AND u.email = :emailUsuario\n")
     Optional<Etiqueta> retornarEtiquetaComNomeEEmailUsuario(String nomeEtiqueta, String emailUsuario);
 
-    List<Etiqueta> findByUsuario(Usuario usuario);
+    @Query("SELECT e FROM Etiqueta e JOIN e.usuario u WHERE u.id = :usuarioId")
+    List<Etiqueta> retornarEtiquetaPorUsuario(Long usuarioId);
 }

@@ -5,6 +5,8 @@ import TaskFlow_api.TaskFlow_api.dto.etiqueta.AtualizacaoEtiquetaDto;
 import TaskFlow_api.TaskFlow_api.dto.etiqueta.CadastroEtiquetaDto;
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 public class Etiqueta {
 
@@ -17,7 +19,7 @@ public class Etiqueta {
     private String cor;
 
     @JoinColumn(name = "id_usuario")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Usuario usuario;
 
     public Etiqueta() {
@@ -76,5 +78,18 @@ public class Etiqueta {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Etiqueta etiqueta = (Etiqueta) o;
+        return Objects.equals(id, etiqueta.id) && Objects.equals(nome, etiqueta.nome) && Objects.equals(cor, etiqueta.cor) && Objects.equals(usuario, etiqueta.usuario);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, nome, cor, usuario);
     }
 }

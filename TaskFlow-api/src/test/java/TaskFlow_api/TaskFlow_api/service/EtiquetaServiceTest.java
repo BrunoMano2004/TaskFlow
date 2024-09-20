@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -20,7 +22,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.when;
 
@@ -61,6 +63,9 @@ class EtiquetaServiceTest {
 
     @Autowired
     private Etiqueta etiqueta1;
+
+    @Captor
+    private ArgumentCaptor<Etiqueta> etiquetaCaptor;
 
     @BeforeEach
     void setUp(){
@@ -109,11 +114,12 @@ class EtiquetaServiceTest {
         when(etiquetaRepository.retornarEtiquetaComNomeEEmailUsuario("Casa", "emailemail@email.com"))
                 .thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> {
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> {
             etiquetaService.buscarEtiqueta("Casa", "emailemail@email.com");
         });
 
-        }
+        assertEquals(ex.getMessage(), "Etiqueta ou email não encontrados!");
+    }
 
     @Test
     void deveriaRetornarListaDeEtiquetasDeUmUsuario(){
@@ -125,11 +131,48 @@ class EtiquetaServiceTest {
         List<ListagemEtiquetaDto>  listagemEtiquetaDtos = Arrays.asList(listagemEtiqueta, listagemEtiqueta1);
 
         when(usuarioRepository.findByEmail(anyString())).thenReturn(Optional.of(usuario));
-        when(etiquetaRepository.findByUsuario(usuario)).thenReturn(etiquetas);
+        when(etiquetaRepository.retornarEtiquetaPorUsuario(usuario.getId())).thenReturn(etiquetas);
 
         List<ListagemEtiquetaDto> listaResul = etiquetaService
                 .retornarTodasEtiquetasPorUsuario("email@email.com");
 
         assertEquals(listagemEtiquetaDtos, listaResul);
+    }
+
+    @Test
+    void deveriaCairNaExcecaoComUsuarioNaoEncontrado(){
+
+        when(usuarioRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> {
+            etiquetaService.retornarTodasEtiquetasPorUsuario("emailemail@emai.com");
+        });
+
+        assertEquals(ex.getMessage(), "Usuário não encontrado!");
+    }
+
+    @Test
+    void deveriaCairNaExcecaoComUsuarioNaoEncontradoAoCadastrar(){
+
+        when(usuarioRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> {
+            etiquetaService.cadastrarEtiqueta(cadastroEtiqueta);
+        });
+
+        assertEquals(ex.getMessage(), "Usuário não encontrado!");
+    }
+
+    @Test
+    void deveriaCadastrarEtiqueta(){
+
+        when(usuarioRepository.findById(anyLong())).thenReturn(Optional.of(usuario));
+
+        etiquetaService.cadastrarEtiqueta(cadastroEtiqueta);
+
+        then(etiquetaRepository).should().save(etiquetaCaptor.capture());
+        Etiqueta etiquetaCapturada = etiquetaCaptor.getValue();
+
+        assertEquals(etiqueta, etiquetaCapturada);
     }
 }

@@ -221,6 +221,28 @@ class UsuarioControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    void deveriaRetornarCodigo404ComAlgumUsuarioNaoEncontrado() throws Exception {
+
+        AtualizacaoUsuarioDto atualizacaoUsuario = new AtualizacaoUsuarioDto(
+                "email@email",
+                "Usuario",
+                "10/10/2004",
+                "imagem"
+        );
+
+        ObjectMapper om = new ObjectMapper();
+        String json = om.writeValueAsString(atualizacaoUsuario);
+
+        when(usuarioService.atualizarUsuario("email@email.com", atualizacaoUsuario))
+                .thenThrow(ResourceNotFoundException.class);
+
+        mvc.perform(patch("/usuario/{email}", "email@email.com")
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
     public record TratamentoErroBeanValidation(
             String campo,
             String mensagem

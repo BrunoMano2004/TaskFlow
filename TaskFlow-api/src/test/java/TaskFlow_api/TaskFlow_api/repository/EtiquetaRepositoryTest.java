@@ -114,7 +114,7 @@ class EtiquetaRepositoryTest {
 
         List<Etiqueta> etiquetas = Arrays.asList(etiqueta, etiqueta1);
 
-        assertEquals(etiquetas, etiquetaRepository.findByUsuario(usuario));
+        assertEquals(etiquetas, etiquetaRepository.retornarEtiquetaPorUsuario(usuario.getId()));
     }
 
     @Test
@@ -135,7 +135,7 @@ class EtiquetaRepositoryTest {
                 1L
         );
 
-        Etiqueta etiqueta2 = new Etiqueta(cadastroEtiqueta, usuario);
+        Etiqueta etiqueta2 = new Etiqueta(cadastroEtiqueta, usuario1);
 
         usuarioRepository.save(usuario1);
         usuarioRepository.save(usuario);
@@ -146,6 +146,6 @@ class EtiquetaRepositoryTest {
 
         List<Etiqueta> etiquetas = Arrays.asList(etiqueta, etiqueta1);
 
-        assertEquals(etiquetas, etiquetaRepository.findByUsuario(usuario));
+        assertEquals(etiquetas, etiquetaRepository.retornarEtiquetaPorUsuario(usuario.getId()));
     }
 }

@@ -1,16 +1,17 @@
 package TaskFlow_api.TaskFlow_api.controller;
 
+import TaskFlow_api.TaskFlow_api.dto.etiqueta.CadastroEtiquetaDto;
 import TaskFlow_api.TaskFlow_api.dto.etiqueta.ListagemEtiquetaDto;
 import TaskFlow_api.TaskFlow_api.service.EtiquetaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -48,5 +49,29 @@ public class EtiquetaController {
     public ResponseEntity<List<ListagemEtiquetaDto>> listarTodasEtiquetasPorUsuario(@PathVariable String emailUsuario){
         List<ListagemEtiquetaDto> listaEtiquetas = etiquetaService.retornarTodasEtiquetasPorUsuario(emailUsuario);
         return ResponseEntity.ok(listaEtiquetas);
+    }
+
+    @Operation(summary = "Cadastra uma etiqueta para um cliente", description = "Cadastra uma etiqueta para um usuário escolhido passando por algumas validações", responses = {
+            @ApiResponse(responseCode = "201",
+                    description = "Usuário criado com sucesso",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404",
+                        description = "Usuário não encontrado pleo id passado",
+                        content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400",
+                        description = "Dados digitados incorretamente ou em branco",
+                        content = @Content(mediaType = "application/json"))
+    })
+    @PostMapping
+    public ResponseEntity<String> cadastrarNovaEtiqueta(@RequestBody @Valid CadastroEtiquetaDto cadastroEtiqueta){
+        etiquetaService.cadastrarEtiqueta(cadastroEtiqueta);
+        return new ResponseEntity<>("Usuario criado com sucesso!", HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/etiqueta/{idEtiqueta}")
+    @Transactional
+    public ResponseEntity<String> deletarEtiqueta(@PathVariable Long idEtiqueta){
+        etiquetaService.excluirEtiqueta(idEtiqueta);
+        return new ResponseEntity<>("Etiqueta deletada com sucesso!", HttpStatus.NO_CONTENT);
     }
 }

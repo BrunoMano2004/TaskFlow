@@ -19,7 +19,7 @@ public class Tarefa {
     @ManyToOne(fetch = FetchType.LAZY)
     private Etiqueta etiqueta;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Usuario usuario;
 
     public Long getId() {
