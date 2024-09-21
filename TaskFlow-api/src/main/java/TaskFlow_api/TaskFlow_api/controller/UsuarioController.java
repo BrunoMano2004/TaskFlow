@@ -79,11 +79,11 @@ public class UsuarioController {
                     description = "Email conflitante com outro já existente na base de dados",
                     content = @Content(mediaType = "application/json"))
     })
-    @PatchMapping("/{email}")
+    @PatchMapping("/{idUsuario}")
     @Transactional
-    public ResponseEntity<ListagemUsuarioDto> atualizarUsuario(@PathVariable String email,
+    public ResponseEntity<ListagemUsuarioDto> atualizarUsuario(@PathVariable Long idUsuario,
                                                                @RequestBody @Valid AtualizacaoUsuarioDto atualizacaoUsuario){
-        ListagemUsuarioDto listagemUsuario = usuarioService.atualizarUsuario(email, atualizacaoUsuario);
+        ListagemUsuarioDto listagemUsuario = usuarioService.atualizarUsuario(idUsuario, atualizacaoUsuario);
 
         return new ResponseEntity<>(listagemUsuario, HttpStatus.OK);
     }

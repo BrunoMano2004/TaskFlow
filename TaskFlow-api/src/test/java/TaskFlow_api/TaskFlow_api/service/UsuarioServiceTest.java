@@ -117,12 +117,12 @@ class UsuarioServiceTest {
     @Test
     void deveriaAlterarDadosDoUsuario(){
 
-        when(usuarioRepository.findByEmail(anyString())).thenReturn(Optional.of(usuario));
+        when(usuarioRepository.findById(anyLong())).thenReturn(Optional.of(usuario));
 
         usuario.atualizarUsuario(atualizacaoUsuario);
         ListagemUsuarioDto listagemUsuarioAtualizado = new ListagemUsuarioDto(usuario);
 
-        ListagemUsuarioDto listagemUsuario = usuarioService.atualizarUsuario("email@email.com", atualizacaoUsuario);
+        ListagemUsuarioDto listagemUsuario = usuarioService.atualizarUsuario(1L, atualizacaoUsuario);
 
         assertEquals(listagemUsuarioAtualizado, listagemUsuario);
     }

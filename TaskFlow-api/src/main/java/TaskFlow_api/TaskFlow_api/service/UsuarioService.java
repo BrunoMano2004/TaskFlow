@@ -37,8 +37,8 @@ public class UsuarioService {
         usuarioRepository.save(new Usuario(cadastroUsuario));
     }
 
-    public ListagemUsuarioDto atualizarUsuario(String email, AtualizacaoUsuarioDto atualizacaoUsuario) {
-        Usuario usuario = usuarioRepository.findByEmail(email)
+    public ListagemUsuarioDto atualizarUsuario(Long idUsuario, AtualizacaoUsuarioDto atualizacaoUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
 
         validacoesUsuarioAtualizacao.forEach(v -> v.validar(atualizacaoUsuario));

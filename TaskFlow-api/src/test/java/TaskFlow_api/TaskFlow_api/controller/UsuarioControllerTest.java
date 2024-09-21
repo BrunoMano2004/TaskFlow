@@ -186,9 +186,9 @@ class UsuarioControllerTest {
         String jsonAtualizacao = om.writeValueAsString(atualizacaoUsuario);
         String jsonListagem = om.writeValueAsString(listagemUsuario);
 
-        when(usuarioService.atualizarUsuario("email@email.com", atualizacaoUsuario)).thenReturn(listagemUsuario);
+        when(usuarioService.atualizarUsuario(1L, atualizacaoUsuario)).thenReturn(listagemUsuario);
 
-        mvc.perform(patch("/usuario/{email}", "email@email.com")
+        mvc.perform(patch("/usuario/{idUsuario}", 1L)
                 .content(jsonAtualizacao)
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(content().json(jsonListagem))
@@ -214,7 +214,7 @@ class UsuarioControllerTest {
         String jsonErros = om.writeValueAsString(listaErros);
         String jsonAtualizacao = om.writeValueAsString(atualizacaoUsuario);
 
-        mvc.perform(patch("/usuario/{email}", "email@email.com")
+        mvc.perform(patch("/usuario/{idUsuario}", 1L)
                 .content(jsonAtualizacao)
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(content().json(jsonErros))
@@ -234,10 +234,10 @@ class UsuarioControllerTest {
         ObjectMapper om = new ObjectMapper();
         String json = om.writeValueAsString(atualizacaoUsuario);
 
-        when(usuarioService.atualizarUsuario("email@email.com", atualizacaoUsuario))
+        when(usuarioService.atualizarUsuario(1L, atualizacaoUsuario))
                 .thenThrow(ResourceNotFoundException.class);
 
-        mvc.perform(patch("/usuario/{email}", "email@email.com")
+        mvc.perform(patch("/usuario/{idUsuario}", 1L)
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
