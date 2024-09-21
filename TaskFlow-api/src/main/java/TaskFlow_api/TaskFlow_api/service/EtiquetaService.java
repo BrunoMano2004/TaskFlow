@@ -56,4 +56,12 @@ public class EtiquetaService {
 
         etiquetaRepository.delete(etiqueta);
     }
+
+    public ListagemEtiquetaDto retornarEtiquetaPeloId(Long idEtiqueta) {
+        Etiqueta etiqueta = etiquetaRepository
+                .findById(idEtiqueta)
+                .orElseThrow(() -> new ResourceNotFoundException("Etiqueta não encontrada!"));
+
+        return new ListagemEtiquetaDto(etiqueta);
+    }
 }

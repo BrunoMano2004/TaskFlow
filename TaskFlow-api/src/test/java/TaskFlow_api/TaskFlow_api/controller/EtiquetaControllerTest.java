@@ -19,11 +19,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.converter.json.Jackson2ObjectMapperBuilder.json;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -112,7 +112,7 @@ class EtiquetaControllerTest {
 
         when(etiquetaService.retornarTodasEtiquetasPorUsuario(anyString())).thenReturn(listagemEtiqueta);
 
-        mvc.perform(get("/etiqueta/{emailUsuario}", "email@email.com"))
+        mvc.perform(get("/etiqueta/usuario/{emailUsuario}", "email@email.com"))
                 .andExpect(content().json(json))
                 .andExpect(status().isOk());
     }
@@ -122,7 +122,7 @@ class EtiquetaControllerTest {
         when(etiquetaService.retornarTodasEtiquetasPorUsuario(anyString()))
                 .thenThrow(new ResourceNotFoundException("Usuário não encontrado!"));
 
-        mvc.perform(get("/etiqueta/{emailUsuario}", "email@email"))
+        mvc.perform(get("/etiqueta/usuario/{emailUsuario}", "email@email"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Usuário não encontrado!"));
     }
@@ -137,7 +137,7 @@ class EtiquetaControllerTest {
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isCreated())
-                .andExpect(content().string("Usuario criado com sucesso!"));
+                .andExpect(content().string("Etiqueta criada com sucesso!"));
     }
 
     @Test
@@ -174,14 +174,14 @@ class EtiquetaControllerTest {
         ObjectMapper om = new ObjectMapper();
         String json = om.writeValueAsString(cadastroEtiqueta);
 
-        doThrow(new ResourceNotFoundException("Usuário não encontrado!"))
+        doThrow(new ResourceNotFoundException("Etiqueta não encontrada!"))
                 .when(etiquetaService).cadastrarEtiqueta(cadastroEtiqueta);
 
         mvc.perform(post("/etiqueta")
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotFound())
-                .andExpect(content().string("Usuário não encontrado!"));
+                .andExpect(content().string("Etiqueta não encontrada!"));
     }
 
     @Test
@@ -190,8 +190,42 @@ class EtiquetaControllerTest {
         doThrow(new ResourceNotFoundException("Etiqueta não encontrado!"))
                 .when(etiquetaService).excluirEtiqueta(1L);
 
-        mvc.perform(delete("/etiqueta/delete/{idEtiqueta}", 1L)
+        mvc.perform(delete("/etiqueta/{idEtiqueta}", 1L)
                 ).andExpect(status().isNotFound())
+                .andExpect(content().string("Etiqueta não encontrado!"));
+    }
+
+    @Test
+    void deveriaRetornar204ComEtiquetaDeletadaComSucesso() throws Exception{
+
+        doNothing().when(etiquetaService).excluirEtiqueta(1L);
+
+        mvc.perform(delete("/etiqueta/{idEtiqueta}", 1L))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deveriaRetornarEtiquetaPeloId() throws Exception {
+
+        ListagemEtiquetaDto listagemEtiqueta = new ListagemEtiquetaDto(etiqueta);
+
+        ObjectMapper om = new ObjectMapper();
+        String json = om.writeValueAsString(listagemEtiqueta);
+
+        when(etiquetaService.retornarEtiquetaPeloId(1L)).thenReturn(listagemEtiqueta);
+
+        mvc.perform(get("/etiqueta/id/{idEtiqueta}", 1L))
+                .andExpect(content().json(json))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deveriaRetornarErro404ComEtiquetaNaoEncontradaAoBuscarPeloId() throws Exception {
+        when(etiquetaService.retornarEtiquetaPeloId(1L))
+                .thenThrow(new ResourceNotFoundException("Etiqueta não encontrado!"));
+
+        mvc.perform(get("/etiqueta/id/{idEtiqueta}", 1L))
+                .andExpect(status().isNotFound())
                 .andExpect(content().string("Etiqueta não encontrado!"));
     }
 

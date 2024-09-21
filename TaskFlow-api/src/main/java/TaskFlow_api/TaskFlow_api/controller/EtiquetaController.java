@@ -22,6 +22,20 @@ public class EtiquetaController {
     @Autowired
     private EtiquetaService etiquetaService;
 
+    @Operation(summary = "Retorna etiqueta pelo id", description = "Retornar etiqueta pesquisando pelo id", responses = {
+            @ApiResponse(responseCode = "200",
+                        description = "Etiqueta encontrada com sucesso!",
+                        content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404",
+                        description = "Etiqueta não encontrada!",
+                        content = @Content(mediaType = "application/json"))
+    })
+    @GetMapping("/id/{idEtiqueta}")
+    public ResponseEntity<ListagemEtiquetaDto> retornarEtiquetaPeloId(@PathVariable Long idEtiqueta){
+        ListagemEtiquetaDto listagemEtiqueta = etiquetaService.retornarEtiquetaPeloId(idEtiqueta);
+        return ResponseEntity.ok(listagemEtiqueta);
+    }
+
     @Operation(summary = "Retorna etiqueta", description = "Retorna etiqueta única de um usuário pelo nome e pelo email do usuário", responses = {
             @ApiResponse(responseCode = "200",
                     description = "Retorna etiqueta com sucesso",
@@ -42,10 +56,10 @@ public class EtiquetaController {
                         description = "Retorna lista de etiquetas, mesmo estando vazia",
                         content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404",
-                        description = "Usuário não encontrado",
+                        description = "Etiqueta não encontrado",
                         content = @Content(mediaType = "Application/json"))
     })
-    @GetMapping("/{emailUsuario}")
+    @GetMapping("/usuario/{emailUsuario}")
     public ResponseEntity<List<ListagemEtiquetaDto>> listarTodasEtiquetasPorUsuario(@PathVariable String emailUsuario){
         List<ListagemEtiquetaDto> listaEtiquetas = etiquetaService.retornarTodasEtiquetasPorUsuario(emailUsuario);
         return ResponseEntity.ok(listaEtiquetas);
@@ -53,10 +67,10 @@ public class EtiquetaController {
 
     @Operation(summary = "Cadastra uma etiqueta para um cliente", description = "Cadastra uma etiqueta para um usuário escolhido passando por algumas validações", responses = {
             @ApiResponse(responseCode = "201",
-                    description = "Usuário criado com sucesso",
+                    description = "Etiqueta criado com sucesso",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404",
-                        description = "Usuário não encontrado pleo id passado",
+                        description = "Etiqueta não encontrado pelo id passado",
                         content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400",
                         description = "Dados digitados incorretamente ou em branco",
@@ -65,10 +79,18 @@ public class EtiquetaController {
     @PostMapping
     public ResponseEntity<String> cadastrarNovaEtiqueta(@RequestBody @Valid CadastroEtiquetaDto cadastroEtiqueta){
         etiquetaService.cadastrarEtiqueta(cadastroEtiqueta);
-        return new ResponseEntity<>("Usuario criado com sucesso!", HttpStatus.CREATED);
+        return new ResponseEntity<>("Etiqueta criada com sucesso!", HttpStatus.CREATED);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/etiqueta/delete/{idEtiqueta}")
+    @Operation(summary = "Exclui a etiqueta", description = "Deleta a etiqueta do banco de dados", responses = {
+            @ApiResponse(responseCode = "204",
+                        description = "Etiqueta deletada com sucesso",
+                        content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404",
+                        description = "Etiqueta não encontrada com o id passado",
+                        content = @Content(mediaType = "applciation/json"))
+    })
+    @DeleteMapping("/{idEtiqueta}")
     @Transactional
     public ResponseEntity<String> deletarEtiqueta(@PathVariable Long idEtiqueta){
         etiquetaService.excluirEtiqueta(idEtiqueta);

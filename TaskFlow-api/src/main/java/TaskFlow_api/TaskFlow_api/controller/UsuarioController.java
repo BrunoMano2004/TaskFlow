@@ -21,6 +21,21 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Operation(summary = "Retorna um usuário", description = "Este endpoint retorna um usuário, pelo id dele, utilizando uma DTO", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Usuário retornado com sucesso",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404",
+                    description = "Usuário não encontrado com o id fornecido",
+                    content = @Content(mediaType = "application/json"))
+    })
+    @GetMapping("/id/{idUsuario}")
+    public ResponseEntity<ListagemUsuarioDto> retornarUsuarioPeliId(@PathVariable Long idUsuario){
+        ListagemUsuarioDto listagemUsuario = usuarioService.retornarUsuarioPeloId(idUsuario);
+        return ResponseEntity.ok(listagemUsuario);
+    }
+
+
     @Operation(summary = "Retorna um usuário", description = "Este endpoint retorna um usuário, pelo endereço de email dele, utilizando uma DTO", responses = {
             @ApiResponse(responseCode = "200",
                         description = "Usuário retornado com sucesso",
@@ -29,9 +44,9 @@ public class UsuarioController {
                         description = "Usuário não encontrado com o email fornecido",
                         content = @Content(mediaType = "application/json"))
     })
-    @GetMapping("/{email}")
+    @GetMapping("/email/{email}")
     public ResponseEntity<ListagemUsuarioDto> retornaUsuarioPorEmail(@PathVariable String email){
-        ListagemUsuarioDto usuario = usuarioService.retornarUsuario(email);
+        ListagemUsuarioDto usuario = usuarioService.retornarUsuarioPeloEmail(email);
         return ResponseEntity.ok(usuario);
     }
 
@@ -71,5 +86,20 @@ public class UsuarioController {
         ListagemUsuarioDto listagemUsuario = usuarioService.atualizarUsuario(email, atualizacaoUsuario);
 
         return new ResponseEntity<>(listagemUsuario, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Exclui o usuário", description = "Deleta o usuário do banco de dados, junto com suas tarefas e etiquetas",
+            responses = {
+            @ApiResponse(responseCode = "204",
+                    description = "Usuário deletada com sucesso",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404",
+                    description = "Usuário não encontrada com o id passado",
+                    content = @Content(mediaType = "applciation/json"))
+    })
+    @DeleteMapping("/{idUsuario}")
+    public ResponseEntity<String> excluirUsuario(@PathVariable Long idUsuario){
+        usuarioService.deletarUsuario(idUsuario);
+        return ResponseEntity.noContent().build();
     }
 }

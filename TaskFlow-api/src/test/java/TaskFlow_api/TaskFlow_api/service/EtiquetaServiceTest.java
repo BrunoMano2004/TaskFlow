@@ -175,4 +175,27 @@ class EtiquetaServiceTest {
 
         assertEquals(etiqueta, etiquetaCapturada);
     }
+
+    @Test
+    void deveriaCairNaExcecaoComEtiquetaNaoEncontrada(){
+
+        when(etiquetaRepository.findById(1L)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> {
+            etiquetaService.excluirEtiqueta(1L);
+        });
+
+        assertEquals(ex.getMessage(), "Etiqueta não encontrada!");
+    }
+
+    @Test
+    void deveriaDeletarAEtiqueta(){
+
+        when(etiquetaRepository.findById(1L)).thenReturn(Optional.of(etiqueta));
+
+        etiquetaService.excluirEtiqueta(1L);
+
+        then(etiquetaRepository).should().delete(etiquetaCaptor.capture());
+        assertEquals(etiqueta, etiquetaCaptor.getValue());
+    }
 }

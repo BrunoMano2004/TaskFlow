@@ -7,10 +7,12 @@ import TaskFlow_api.TaskFlow_api.exception.ResourceNotFoundException;
 import TaskFlow_api.TaskFlow_api.model.Usuario;
 import TaskFlow_api.TaskFlow_api.repository.UsuarioRepository;
 import TaskFlow_api.TaskFlow_api.validacoes.usuario.ValidacoesUsuario;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.when;
@@ -40,46 +43,69 @@ class UsuarioServiceTest {
     @Spy
     private List<ValidacoesUsuario<AtualizacaoUsuarioDto>> validacoesUsuariosAtualizacao = new ArrayList<>();
 
-    @Test
-    void deveriaRetornarUmUsuario(){
-        Usuario usuario = new Usuario("email@email.com", "Usuario", LocalDate.now(), "imagem");
-        ListagemUsuarioDto usuarioDto = new ListagemUsuarioDto(usuario);
-        when(usuarioRepository.findByEmail(anyString())).thenReturn(Optional.of(usuario));
+    @Autowired
+    private Usuario usuario;
 
-        ListagemUsuarioDto listagemUsuarioDto = usuarioService.retornarUsuario("email@email.com");
+    @Autowired
+    private CadastroUsuarioDto cadastroUsuario;
 
-        assertEquals(listagemUsuarioDto, usuarioDto);
-    }
+    @Autowired
+    private AtualizacaoUsuarioDto atualizacaoUsuario;
 
-    @Test
-    void naoDeveriaLancarExcecao(){
-        Usuario usuario = new Usuario("email@email.com", "Usuario", LocalDate.now(), "imagem");
-        ListagemUsuarioDto usuarioDto = new ListagemUsuarioDto(usuario);
-        when(usuarioRepository.findByEmail(anyString())).thenReturn(Optional.of(usuario));
+    @Autowired
+    private ListagemUsuarioDto listagemUsuario;
 
-        assertDoesNotThrow(() -> {
-            usuarioService.retornarUsuario("email@email.com");
-        });
-    }
-
-    @Test
-    void deveriaLancarExcecao(){
-        when(usuarioRepository.findByEmail(anyString())).thenReturn(Optional.empty());
-
-        assertThrows(ResourceNotFoundException.class, () -> {
-            usuarioService.retornarUsuario("email@email.com");
-        });
-    }
-
-    @Test
-    void deveriaChamarMetodoSalvar(){
-        CadastroUsuarioDto cadastroUsuario = new CadastroUsuarioDto(
+    @BeforeEach
+    void setUp(){
+        cadastroUsuario = new CadastroUsuarioDto(
                 "email@email.com",
                 "Usuario usuario",
                 "10/10/2010",
                 "imagem");
 
-        Usuario usuario = new Usuario(cadastroUsuario);
+        usuario = new Usuario(cadastroUsuario);
+
+        atualizacaoUsuario = new AtualizacaoUsuarioDto(
+                "email@gmail.com",
+                "Usuario",
+                "10/10/2004",
+                "imagem"
+        );
+
+        listagemUsuario = new ListagemUsuarioDto(usuario);
+    }
+
+    @Test
+    void deveriaRetornarSomenteUmUsuarioPeloEmail(){
+
+        when(usuarioRepository.findByEmail(anyString())).thenReturn(Optional.of(usuario));
+
+        ListagemUsuarioDto listagemUsuarioDto = usuarioService.retornarUsuarioPeloEmail("email@email.com");
+
+        assertEquals(listagemUsuarioDto, listagemUsuario);
+    }
+
+    @Test
+    void naoDeveriaLancarExcecaoAoBuscarUsuarioPeloEmail(){
+
+        when(usuarioRepository.findByEmail(anyString())).thenReturn(Optional.of(usuario));
+
+        assertDoesNotThrow(() -> {
+            usuarioService.retornarUsuarioPeloEmail("email@email.com");
+        });
+    }
+
+    @Test
+    void deveriaLancarExcecaoAoNaoEncontrarUsuario(){
+        when(usuarioRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> {
+            usuarioService.retornarUsuarioPeloEmail("email@email.com");
+        });
+    }
+
+    @Test
+    void deveriaChamarMetodoSalvarAoCadastrarUsuario(){
 
         usuarioService.cadastrarUsuario(cadastroUsuario);
 
@@ -90,21 +116,6 @@ class UsuarioServiceTest {
 
     @Test
     void deveriaAlterarDadosDoUsuario(){
-        AtualizacaoUsuarioDto atualizacaoUsuario = new AtualizacaoUsuarioDto(
-                "email@gmail.com",
-                "Usuario",
-                "10/10/2004",
-                "imagem"
-        );
-
-        CadastroUsuarioDto cadastroUsuario = new CadastroUsuarioDto(
-                "email@email.com",
-                "Usuario Usuario",
-                "10/10/2000",
-                "imagem"
-        );
-
-        Usuario usuario = new Usuario(cadastroUsuario);
 
         when(usuarioRepository.findByEmail(anyString())).thenReturn(Optional.of(usuario));
 
@@ -114,5 +125,47 @@ class UsuarioServiceTest {
         ListagemUsuarioDto listagemUsuario = usuarioService.atualizarUsuario("email@email.com", atualizacaoUsuario);
 
         assertEquals(listagemUsuarioAtualizado, listagemUsuario);
+    }
+
+    @Test
+    void deveriaAcessarOMetodoExcluirDoRepositoryAoExcluirUsuario(){
+
+        when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
+
+        usuarioService.deletarUsuario(1L);
+
+        then(usuarioRepository).should().delete(usuarioCaptor.capture());
+        assertEquals(usuario, usuarioCaptor.getValue());
+    }
+
+    @Test
+    void deveriaRetornarCairNaExcecaoComUsuarioNaoEncontrado(){
+
+        when(usuarioRepository.findById(1L)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> {
+            usuarioService.deletarUsuario(1L);
+        });
+
+        assertEquals(ex.getMessage(), "Usuário não encontrado");
+    }
+
+    @Test
+    void naoDeveriaLancarExcecaoAoBuscarUsuarioPeloId(){
+
+        when(usuarioRepository.findById(anyLong())).thenReturn(Optional.of(usuario));
+
+        assertDoesNotThrow(() -> {
+            usuarioService.retornarUsuarioPeloId(1L);
+        });
+    }
+
+    @Test
+    void deveriaLancarExcecaoAoNaoEncontrarUsuarioPeloId(){
+        when(usuarioRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> {
+            usuarioService.retornarUsuarioPeloId(1L);
+        });
     }
 }

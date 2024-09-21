@@ -24,7 +24,7 @@ public class UsuarioService {
     @Autowired
     private List<ValidacoesUsuario<AtualizacaoUsuarioDto>> validacoesUsuarioAtualizacao;
 
-    public ListagemUsuarioDto retornarUsuario(String email){
+    public ListagemUsuarioDto retornarUsuarioPeloEmail(String email){
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
 
@@ -44,6 +44,20 @@ public class UsuarioService {
         validacoesUsuarioAtualizacao.forEach(v -> v.validar(atualizacaoUsuario));
 
         usuario.atualizarUsuario(atualizacaoUsuario);
+
+        return new ListagemUsuarioDto(usuario);
+    }
+
+    public void deletarUsuario(Long idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+
+        usuarioRepository.delete(usuario);
+    }
+
+    public ListagemUsuarioDto retornarUsuarioPeloId(Long idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
 
         return new ListagemUsuarioDto(usuario);
     }
