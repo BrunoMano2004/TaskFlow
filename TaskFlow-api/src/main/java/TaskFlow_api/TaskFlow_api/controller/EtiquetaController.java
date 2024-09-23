@@ -56,7 +56,7 @@ public class EtiquetaController {
                         description = "Retorna lista de etiquetas, mesmo estando vazia",
                         content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404",
-                        description = "Etiqueta não encontrado",
+                        description = "Usuário não encontrado!",
                         content = @Content(mediaType = "Application/json"))
     })
     @GetMapping("/usuario/{emailUsuario}")

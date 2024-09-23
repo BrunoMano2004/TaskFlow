@@ -5,13 +5,19 @@ import TaskFlow_api.TaskFlow_api.dto.usuario.ListagemUsuarioDto;
 import TaskFlow_api.TaskFlow_api.model.Tarefa;
 
 public record ListagemTarefaDto(
+        Long id,
         String nome,
         String descricao,
         String status,
-        ListagemEtiquetaDto etiqueta,
-        ListagemUsuarioDto usuario
+        String dataExpiracao,
+        String dataFinalizacao
 ) {
     public ListagemTarefaDto(Tarefa tarefa){
-        this(tarefa.getNome(), tarefa.getDescricao(), tarefa.getStatus().toString(), new ListagemEtiquetaDto(tarefa.getEtiqueta()), new ListagemUsuarioDto(tarefa.getUsuario()));
+        this(tarefa.getId(),
+                tarefa.getNome(),
+                tarefa.getDescricao(),
+                tarefa.getStatus().toString(),
+                tarefa.getDataExpiracao().toString(),
+                tarefa.getDataFinalizacao() != null ? tarefa.getDataFinalizacao().toString() : null);
     }
 }

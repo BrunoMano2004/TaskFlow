@@ -1,0 +1,1 @@
+alter table tarefa add column data_expiracao date not null

@@ -1,7 +1,6 @@
 package TaskFlow_api.TaskFlow_api.model;
 
 
-import TaskFlow_api.TaskFlow_api.dto.etiqueta.AtualizacaoEtiquetaDto;
 import TaskFlow_api.TaskFlow_api.dto.etiqueta.CadastroEtiquetaDto;
 import jakarta.persistence.*;
 
@@ -35,17 +34,6 @@ public class Etiqueta {
         this.nome = cadastroEtiqueta.nome();
         this.cor = cadastroEtiqueta.cor();
         this.usuario = usuario;
-    }
-
-    public void atualizar(AtualizacaoEtiquetaDto atualizacaoEtiqueta){
-
-        if (!(atualizacaoEtiqueta.nome().isBlank())){
-            this.nome = atualizacaoEtiqueta.nome();
-        }
-
-        if (!(atualizacaoEtiqueta.cor().isBlank())){
-            this.nome = atualizacaoEtiqueta.cor();
-        }
     }
 
     public Long getId() {

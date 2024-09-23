@@ -43,8 +43,6 @@ class UsuarioControllerTest {
 
         when(usuarioService.retornarUsuarioPeloEmail(anyString())).thenReturn(usuarioDto);
 
-        System.out.println(LocalDate.now());
-
         ObjectMapper om = new ObjectMapper();
         om.registerModule(new JavaTimeModule());
         om.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
