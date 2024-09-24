@@ -56,6 +56,9 @@ class TarefaRepositoryTest {
     @MockBean
     private Etiqueta etiqueta;
 
+    @Autowired
+    private Etiqueta etiqueta1;
+
     @MockBean
     private CadastroTarefaDto cadastroTarefa;
 
@@ -158,5 +161,34 @@ class TarefaRepositoryTest {
 
         assertEquals(tarefas, tarefaRepository.retornarListaDeTarefasPorUsuario(usuario));
 
+    }
+
+    @Test
+    void deveriaRetornarListaDeTarefasPorEtiqueta(){
+
+        usuarioRepository.save(usuario);
+
+        etiqueta = new Etiqueta("Trabalho", "#940534", usuario);
+        etiqueta1 = new Etiqueta("Casa", "#frgrsd", usuario);
+
+        etiquetaRepository.save(etiqueta);
+        etiquetaRepository.save(etiqueta1);
+
+        tarefa.setEtiqueta(etiqueta);
+        tarefa1.setEtiqueta(etiqueta);
+        tarefa2.setEtiqueta(etiqueta1);
+
+        tarefa.setUsuario(usuario);
+        tarefa1.setUsuario(usuario);
+        tarefa2.setUsuario(usuario);
+
+        tarefaRepository.save(tarefa);
+        tarefaRepository.save(tarefa1);
+        tarefaRepository.save(tarefa2);
+
+        List<Tarefa> tarefasExpec = Arrays.asList(tarefa, tarefa1);
+        List<Tarefa> tarefasResul = tarefaRepository.retornarListaDeTarefasPorEtiqueta(etiqueta);
+
+        assertEquals(tarefasExpec, tarefasResul);
     }
 }

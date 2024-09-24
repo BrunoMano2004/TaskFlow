@@ -22,11 +22,17 @@ public class EtiquetaService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public ListagemEtiquetaDto buscarEtiqueta(String nomeEtiqueta, String emailUsuario) {
-        Etiqueta etiqueta = etiquetaRepository.retornarEtiquetaComNomeEEmailUsuario(nomeEtiqueta, emailUsuario)
-                .orElseThrow(() -> new ResourceNotFoundException("Etiqueta ou email não encontrados!"));
+    public List<ListagemEtiquetaDto> buscarEtiqueta(String nomeEtiqueta, Long idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario não encontrado!"));
 
-        return new ListagemEtiquetaDto(etiqueta);
+        List<Etiqueta> etiquetas = etiquetaRepository.retornarEtiquetaComNomeEUsuario(nomeEtiqueta, usuario);
+
+        List<ListagemEtiquetaDto> listagemEtiquetas = etiquetas.stream()
+                .map(ListagemEtiquetaDto::new)
+                .toList();
+
+        return listagemEtiquetas;
     }
 
     public List<ListagemEtiquetaDto> retornarTodasEtiquetasPorUsuario(String emailUsuario) {

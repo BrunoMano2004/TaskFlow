@@ -1,16 +1,17 @@
 package TaskFlow_api.TaskFlow_api.controller;
 
+import TaskFlow_api.TaskFlow_api.dto.tarefa.CadastroTarefaDto;
 import TaskFlow_api.TaskFlow_api.dto.tarefa.ListagemTarefaDto;
 import TaskFlow_api.TaskFlow_api.service.TarefaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class TarefaController {
                             description = "Tarefa não encontrada com o id especificado",
                             content = @Content(mediaType = "application/json"))
             })
-    @GetMapping("/{idTarefa}")
+    @GetMapping("/id/{idTarefa}")
     public ResponseEntity<ListagemTarefaDto> retornarTarefaPeloId(@PathVariable Long idTarefa){
         ListagemTarefaDto listagemTarefa = tarefaService.buscarTarefaPeloId(idTarefa);
 
@@ -45,7 +46,7 @@ public class TarefaController {
                             description = "Retorna lista de tarefas encontradas com sucesso",
                             content = @Content(mediaType = "application/json")),
                     @ApiResponse(responseCode = "404",
-                            description = "Usuario não encoontrado com o id especificado",
+                            description = "Usuario não encontrado com o id especificado",
                             content = @Content(mediaType = "application/json"))
             })
     @GetMapping("/usuario/{idUsuario}")
@@ -55,5 +56,38 @@ public class TarefaController {
         return ResponseEntity.ok(listagemTarefa);
     }
 
+    @Operation(summary = "Retorna todas as tarefas com base nas etiquetas",
+            description = "Busca e retorna todas as tarefas com base nas etiquetas encontradas pela pesquisa",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "Retorna lista de tarefas encontradas com sucesso",
+                            content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "404",
+                            description = "Usuario não encontrado com o id especificado",
+                            content = @Content(mediaType = "application/json"))
+            })
+    @GetMapping("/etiqueta/{nomeEtiqueta}/{idUsuario}")
+    public ResponseEntity<List<ListagemTarefaDto>> buscarTarefasPorEtiquetaDeUmUsuario(@PathVariable String nomeEtiqueta,
+                                                                                       @PathVariable Long idUsuario){
+        List<ListagemTarefaDto> tarefas = tarefaService.buscarTodasTarefasPorEtiqueta(nomeEtiqueta, idUsuario);
+        return ResponseEntity.ok(tarefas);
+    }
 
+    @Operation(summary = "Cadastra uma tarefa", description = "Cadastra uma tarefa através de uma dto", responses = {
+            @ApiResponse(responseCode = "201",
+                        description = "Tarefa criada com sucesso",
+                        content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404",
+                        description = "Usuário ou etiqueta não encontrado",
+                        content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400",
+                        description = "Algum dado digitado de forma inválida",
+                        content = @Content(mediaType = "application/json"))
+    })
+    @PostMapping
+    @Transactional
+    public ResponseEntity<String> cadastroDeTarefa(@RequestBody @Valid CadastroTarefaDto cadastroTarefa){
+        tarefaService.criarTarefa(cadastroTarefa);
+        return new ResponseEntity<>("Tarefa criada com sucesso", HttpStatus.CREATED);
+    }
 }

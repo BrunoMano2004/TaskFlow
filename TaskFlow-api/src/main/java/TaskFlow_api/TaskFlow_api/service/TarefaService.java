@@ -1,14 +1,20 @@
 package TaskFlow_api.TaskFlow_api.service;
 
+import TaskFlow_api.TaskFlow_api.dto.tarefa.CadastroTarefaDto;
 import TaskFlow_api.TaskFlow_api.dto.tarefa.ListagemTarefaDto;
 import TaskFlow_api.TaskFlow_api.exception.ResourceNotFoundException;
+import TaskFlow_api.TaskFlow_api.model.Etiqueta;
 import TaskFlow_api.TaskFlow_api.model.Tarefa;
 import TaskFlow_api.TaskFlow_api.model.Usuario;
+import TaskFlow_api.TaskFlow_api.repository.EtiquetaRepository;
 import TaskFlow_api.TaskFlow_api.repository.TarefaRepository;
 import TaskFlow_api.TaskFlow_api.repository.UsuarioRepository;
+import TaskFlow_api.TaskFlow_api.validacoes.tarefa.ValidacoesTarefa;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -19,6 +25,12 @@ public class TarefaService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private EtiquetaRepository etiquetaRepository;
+
+    @Autowired
+    private List<ValidacoesTarefa> validadores;
 
     public ListagemTarefaDto buscarTarefaPeloId(Long idTarefa) {
         Tarefa tarefa = tarefaRepository
@@ -43,4 +55,35 @@ public class TarefaService {
     }
 
 
+    public List<ListagemTarefaDto> buscarTodasTarefasPorEtiqueta(String nomeEtiqueta, Long idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
+
+        List<Etiqueta> etiquetasEncontradas = etiquetaRepository
+                .retornarEtiquetaComNomeEUsuario(nomeEtiqueta, usuario);
+
+        List<Tarefa> tarefas =
+                etiquetasEncontradas.stream()
+                        .flatMap(e -> tarefaRepository.retornarListaDeTarefasPorEtiqueta(e).stream())
+                        .toList();
+
+        List<ListagemTarefaDto> listagemTarefas = tarefas.stream()
+                .map(ListagemTarefaDto::new)
+                .toList();
+
+        return listagemTarefas;
+    }
+
+    public void criarTarefa(CadastroTarefaDto cadastroTarefa) {
+
+        Usuario usuario = usuarioRepository.findById(cadastroTarefa.idUsuario())
+                        .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
+
+        Etiqueta etiqueta = etiquetaRepository.findById(cadastroTarefa.idEtiqueta())
+                        .orElseThrow(() -> new ResourceNotFoundException("Etiqueta não encontrada!"));
+
+        validadores.forEach(v -> v.validar(cadastroTarefa));
+
+        tarefaRepository.save(new Tarefa(cadastroTarefa, etiqueta, usuario));
+    }
 }

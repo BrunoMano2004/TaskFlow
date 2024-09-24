@@ -76,28 +76,22 @@ class EtiquetaControllerTest {
     }
 
     @Test
-    void deveriaRetornarEtiquetaQuandoEncontrada() throws Exception {
+    void deveriaRetornarEtiquetasQuandoEncontradaPeloNome() throws Exception {
 
-        ListagemEtiquetaDto listagemEtiqueta = new ListagemEtiquetaDto(etiqueta);
+        List<Etiqueta> etiquetas = Arrays.asList(etiqueta, etiqueta1);
+        List<ListagemEtiquetaDto> listagemEtiquetas = etiquetas.stream()
+                .map(ListagemEtiquetaDto::new)
+                .toList();
 
         ObjectMapper om = new ObjectMapper();
-        String json = om.writeValueAsString(listagemEtiqueta);
+        String json = om.writeValueAsString(listagemEtiquetas);
 
-        when(etiquetaService.buscarEtiqueta("Trabalho", "email@email.com"))
-                .thenReturn(listagemEtiqueta);
+        when(etiquetaService.buscarEtiqueta("Trabalho", 1L))
+                .thenReturn(listagemEtiquetas);
 
-        mvc.perform(get("/etiqueta/{nomeEtiqueta}/{emailUsuario}", "Trabalho", "email@email.com"))
+        mvc.perform(get("/etiqueta/{nomeEtiqueta}/{idUsuario}", "Trabalho", 1L))
                 .andExpect(content().json(json))
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    void deveriaCairNaExcecaoComUsuarioOuEtiquetaNaoEncontrados() throws Exception {
-        when(etiquetaService.buscarEtiqueta("Trabalho", "email@email.com"))
-                .thenThrow(ResourceNotFoundException.class);
-
-        mvc.perform(get("/etiqueta/{nomeEtiqueta}/{emailUsuario}", "Trabalho", "email@email.com"))
-                .andExpect(status().isNotFound());
     }
 
     @Test

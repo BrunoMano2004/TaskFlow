@@ -36,18 +36,18 @@ public class EtiquetaController {
         return ResponseEntity.ok(listagemEtiqueta);
     }
 
-    @Operation(summary = "Retorna etiqueta", description = "Retorna etiqueta única de um usuário pelo nome e pelo email do usuário", responses = {
+    @Operation(summary = "Retorna etiqueta", description = "Retorna etiqueta única de um usuário pelo nome da etiqueta e pelo id do usuário", responses = {
             @ApiResponse(responseCode = "200",
                     description = "Retorna etiqueta com sucesso",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404",
-                    description = "Etiqueta ou usuario não encontrado",
+                    description = "Usuario não encontrado",
                     content = @Content(mediaType = "application/json"))
     })
-    @GetMapping("/{nomeEtiqueta}/{emailUsuario}")
-    public ResponseEntity<ListagemEtiquetaDto> bucarEtiquetaPeloNome(@PathVariable String nomeEtiqueta,
-                                                                     @PathVariable String emailUsuario){
-        ListagemEtiquetaDto listagemEtiqueta = etiquetaService.buscarEtiqueta(nomeEtiqueta, emailUsuario);
+    @GetMapping("/{nomeEtiqueta}/{idUsuario}")
+    public ResponseEntity<List<ListagemEtiquetaDto>> buscarEtiquetaPeloNome(@PathVariable String nomeEtiqueta,
+                                                                     @PathVariable Long idUsuario){
+        List<ListagemEtiquetaDto> listagemEtiqueta = etiquetaService.buscarEtiqueta(nomeEtiqueta, idUsuario);
         return ResponseEntity.ok(listagemEtiqueta);
     }
 

@@ -8,7 +8,6 @@ import TaskFlow_api.TaskFlow_api.model.Etiqueta;
 import TaskFlow_api.TaskFlow_api.model.Usuario;
 import TaskFlow_api.TaskFlow_api.repository.EtiquetaRepository;
 import TaskFlow_api.TaskFlow_api.repository.UsuarioRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,21 +17,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class EtiquetaServiceTest {
@@ -98,27 +92,19 @@ class EtiquetaServiceTest {
     @Test
     void deveriaRetornarEtiquetaComNomeEEmailCorretos(){
 
-        ListagemEtiquetaDto listagemEtiquetaEsperado = new ListagemEtiquetaDto(etiqueta);
+        List<Etiqueta> etiquetas = Arrays.asList(etiqueta, etiqueta1);
+        List<ListagemEtiquetaDto> listagemEtiquetas = etiquetas.stream()
+                .map(ListagemEtiquetaDto::new)
+                .toList();
 
-        when(etiquetaRepository.retornarEtiquetaComNomeEEmailUsuario("Trabalho", "email@email.com"))
-                .thenReturn(Optional.of(etiqueta));
+        when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
 
-        ListagemEtiquetaDto listagemEtiquetaResultado = etiquetaService.buscarEtiqueta("Trabalho", "email@email.com");
+        when(etiquetaRepository.retornarEtiquetaComNomeEUsuario("Trabalho", usuario))
+                .thenReturn(etiquetas);
 
-        assertEquals(listagemEtiquetaEsperado, listagemEtiquetaResultado);
-    }
+        List<ListagemEtiquetaDto> listagemEtiquetaResultado = etiquetaService.buscarEtiqueta("Trabalho", 1L);
 
-    @Test
-    void deveriaCairNaExcecaoComDadosNaoEncontrados(){
-
-        when(etiquetaRepository.retornarEtiquetaComNomeEEmailUsuario("Casa", "emailemail@email.com"))
-                .thenReturn(Optional.empty());
-
-        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> {
-            etiquetaService.buscarEtiqueta("Casa", "emailemail@email.com");
-        });
-
-        assertEquals(ex.getMessage(), "Etiqueta ou email não encontrados!");
+        assertEquals(listagemEtiquetas, listagemEtiquetaResultado);
     }
 
     @Test

@@ -1,7 +1,6 @@
 package TaskFlow_api.TaskFlow_api.repository;
 
 import TaskFlow_api.TaskFlow_api.dto.etiqueta.CadastroEtiquetaDto;
-import TaskFlow_api.TaskFlow_api.dto.etiqueta.ListagemEtiquetaDto;
 import TaskFlow_api.TaskFlow_api.dto.usuario.CadastroUsuarioDto;
 import TaskFlow_api.TaskFlow_api.model.Etiqueta;
 import TaskFlow_api.TaskFlow_api.model.Usuario;
@@ -14,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,29 +67,18 @@ class EtiquetaRepositoryTest {
     }
 
     @Test
-    void deveriaRetornarEtiquetaComNomeEEmailDoUsuarioCorretos(){
+    void deveriaRetornarEtiquetaComNomeEUsuarioCorretos(){
 
         usuarioRepository.save(usuario);
 
         etiquetaRepository.save(etiqueta);
 
-        Etiqueta etiquetaResul =
-                etiquetaRepository.retornarEtiquetaComNomeEEmailUsuario("Trabalho", "email@email.com").get();
+        List<Etiqueta> etiquetas = Collections.singletonList(etiqueta);
 
-        assertEquals(etiqueta, etiquetaResul);
-    }
+        List<Etiqueta> etiquetasResul =
+                etiquetaRepository.retornarEtiquetaComNomeEUsuario("Trabalho", usuario);
 
-    @Test
-    void naoDeveriaRetornarEtiquetaComEmailDoUsuarioIncorreto(){
-
-        usuarioRepository.save(usuario);
-
-        etiquetaRepository.save(etiqueta);
-
-        Optional<Etiqueta> etiquetaResul =
-                etiquetaRepository.retornarEtiquetaComNomeEEmailUsuario("Trabalho", "emailemail@email.com");
-
-        assertTrue(etiquetaResul.isEmpty());
+        assertEquals(etiquetas, etiquetasResul);
     }
 
     @Test
@@ -99,10 +88,10 @@ class EtiquetaRepositoryTest {
 
         etiquetaRepository.save(etiqueta);
 
-        Optional<Etiqueta> etiquetaResul =
-                etiquetaRepository.retornarEtiquetaComNomeEEmailUsuario("Casa", "email@email.com");
+        List<Etiqueta> etiquetasResul =
+                etiquetaRepository.retornarEtiquetaComNomeEUsuario("Casa", usuario);
 
-        assertTrue(etiquetaResul.isEmpty());
+        assertTrue(etiquetasResul.isEmpty());
     }
 
     @Test
