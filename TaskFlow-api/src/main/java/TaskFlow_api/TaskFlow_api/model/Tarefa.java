@@ -29,9 +29,11 @@ public class Tarefa {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @JoinColumn(name = "id_etiqueta")
     @ManyToOne(fetch = FetchType.LAZY)
     private Etiqueta etiqueta;
 
+    @JoinColumn(name = "id_usuario")
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Usuario usuario;
 

@@ -1,1 +1,1 @@
-alter table tarefa add column data_finalizacao date not null
+alter table tarefa add column data_finalizacao date
