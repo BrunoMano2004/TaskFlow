@@ -42,6 +42,11 @@ public class ExceptionHandles {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(TaskAlreadyMadeException.class)
+    public ResponseEntity<String> tratarTarefaJaConcluida(TaskAlreadyMadeException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
     public record ErroBeanValidation(
             String campo,
             String mensagem

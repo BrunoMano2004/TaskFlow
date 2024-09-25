@@ -6,7 +6,9 @@ import TaskFlow_api.TaskFlow_api.dto.tarefa.CadastroTarefaDto;
 import TaskFlow_api.TaskFlow_api.dto.tarefa.ListagemTarefaDto;
 import TaskFlow_api.TaskFlow_api.dto.usuario.CadastroUsuarioDto;
 import TaskFlow_api.TaskFlow_api.exception.ResourceNotFoundException;
+import TaskFlow_api.TaskFlow_api.exception.TaskAlreadyMadeException;
 import TaskFlow_api.TaskFlow_api.model.Etiqueta;
+import TaskFlow_api.TaskFlow_api.model.Status;
 import TaskFlow_api.TaskFlow_api.model.Tarefa;
 import TaskFlow_api.TaskFlow_api.model.Usuario;
 import TaskFlow_api.TaskFlow_api.repository.EtiquetaRepository;
@@ -238,5 +240,45 @@ class TarefaServiceTest {
         });
 
         assertEquals("Etiqueta não encontrada!", ex.getMessage());
+    }
+
+    @Test
+    void deveriaAtualizarOStatusDaTarefaParaConcluido(){
+
+        when(tarefaRepository.findById(anyLong())).thenReturn(Optional.of(tarefa));
+
+        tarefaService.concluirTarefa(1L);
+
+        assertEquals(tarefa.getStatus(), Status.FECHADA);
+
+        LocalDateTime agora = LocalDateTime.now();
+        assertTrue(tarefa.getDataFinalizacao().isAfter(agora.minusSeconds(1)) &&
+                tarefa.getDataFinalizacao().isBefore(agora.plusSeconds(1)));
+    }
+
+    @Test
+    void deveriaCairNaExcecaoComTarefaNaoEncontradaPeloIdAoTentarConcluir(){
+
+        when(tarefaRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> {
+            tarefaService.concluirTarefa(1L);
+        });
+
+        assertEquals("Tarefa não encontrada!", ex.getMessage());
+    }
+
+    @Test
+    void deveriaCairNaExcecaoComTarefaJaConcluidaOuExpirada(){
+
+        tarefa.setStatus(Status.EXPIRADA);
+
+        when(tarefaRepository.findById(anyLong())).thenReturn(Optional.of(tarefa));
+
+        TaskAlreadyMadeException ex = assertThrows(TaskAlreadyMadeException.class, () -> {
+            tarefaService.concluirTarefa(1L);
+        });
+
+        assertEquals("Tarefa já concluída!", ex.getMessage());
     }
 }

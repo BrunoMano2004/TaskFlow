@@ -7,6 +7,7 @@ import TaskFlow_api.TaskFlow_api.dto.tarefa.ListagemTarefaDto;
 import TaskFlow_api.TaskFlow_api.dto.usuario.CadastroUsuarioDto;
 import TaskFlow_api.TaskFlow_api.exception.DataAlreadyExistException;
 import TaskFlow_api.TaskFlow_api.exception.ResourceNotFoundException;
+import TaskFlow_api.TaskFlow_api.exception.TaskAlreadyMadeException;
 import TaskFlow_api.TaskFlow_api.model.Etiqueta;
 import TaskFlow_api.TaskFlow_api.model.Tarefa;
 import TaskFlow_api.TaskFlow_api.model.Usuario;
@@ -289,6 +290,35 @@ class TarefaControllerTest {
                         .content(json)
                 ).andExpect(status().isConflict())
                 .andExpect(content().string("Nome de tarefa já aexistente"));
+    }
+
+    @Test
+    void deveriaRetornarCodigo204DeNoContentComStatusDaTarefaAtualizadoParaConcluido() throws Exception {
+
+        mvc.perform(patch("/tarefa/{idTarefa}/concluir", 1))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deveriaRetornarCodigo404ComTarefaNaoEncontradaAoTentarAtualizarOStatusDaTarefaParaConcluida() throws Exception {
+
+        doThrow(new ResourceNotFoundException("Tarefa não encontrada!"))
+                .when(tarefaService).concluirTarefa(1L);
+
+        mvc.perform(patch("/tarefa/{idTarefa}/concluir", 1))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Tarefa não encontrada!"));
+    }
+
+    @Test
+    void deveriaRetornarCodigo409DeConflictComTarefaJaConcluidaAoTentarConcluirNovamente() throws Exception {
+
+        doThrow(new TaskAlreadyMadeException("Tarefa já concluída!"))
+                .when(tarefaService).concluirTarefa(1L);
+
+        mvc.perform(patch("/tarefa/{idTarefa}/concluir", 1))
+                .andExpect(status().isConflict())
+                .andExpect(content().string("Tarefa já concluída!"));
     }
 
     public record TratamentoErroBeanValidation(

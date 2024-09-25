@@ -33,6 +33,7 @@ public class TarefaController {
                             content = @Content(mediaType = "application/json"))
             })
     @GetMapping("/id/{idTarefa}")
+    @Transactional
     public ResponseEntity<ListagemTarefaDto> retornarTarefaPeloId(@PathVariable Long idTarefa){
         ListagemTarefaDto listagemTarefa = tarefaService.buscarTarefaPeloId(idTarefa);
 
@@ -50,6 +51,7 @@ public class TarefaController {
                             content = @Content(mediaType = "application/json"))
             })
     @GetMapping("/usuario/{idUsuario}")
+    @Transactional
     public ResponseEntity<List<ListagemTarefaDto>> retornarTodasTarefasDeUmUsuario(@PathVariable Long idUsuario){
         List<ListagemTarefaDto> listagemTarefa = tarefaService.buscarTodasTarefasDeUmUsuario(idUsuario);
 
@@ -67,6 +69,7 @@ public class TarefaController {
                             content = @Content(mediaType = "application/json"))
             })
     @GetMapping("/etiqueta/{nomeEtiqueta}/{idUsuario}")
+    @Transactional
     public ResponseEntity<List<ListagemTarefaDto>> buscarTarefasPorEtiquetaDeUmUsuario(@PathVariable String nomeEtiqueta,
                                                                                        @PathVariable Long idUsuario){
         List<ListagemTarefaDto> tarefas = tarefaService.buscarTodasTarefasPorEtiqueta(nomeEtiqueta, idUsuario);
@@ -89,5 +92,23 @@ public class TarefaController {
     public ResponseEntity<String> cadastroDeTarefa(@RequestBody @Valid CadastroTarefaDto cadastroTarefa){
         tarefaService.criarTarefa(cadastroTarefa);
         return new ResponseEntity<>("Tarefa criada com sucesso", HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "Concluir tarefa", description = "Mudar status da tarefa para concluída", responses = {
+            @ApiResponse(responseCode = "204",
+                    description = "Tarefa concluída com sucesso",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404",
+                    description = "Tarefa não encontrada",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "409",
+                    description = "Tarefa já estava concluída ou expirada",
+                    content = @Content(mediaType = "application/json"))
+    })
+    @PatchMapping("/{idTarefa}/concluir")
+    @Transactional
+    public ResponseEntity<String> concluirTarefa(@PathVariable Long idTarefa){
+        tarefaService.concluirTarefa(idTarefa);
+        return ResponseEntity.noContent().build();
     }
 }
