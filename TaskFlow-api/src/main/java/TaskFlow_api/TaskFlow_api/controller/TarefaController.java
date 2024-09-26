@@ -33,7 +33,6 @@ public class TarefaController {
                             content = @Content(mediaType = "application/json"))
             })
     @GetMapping("/id/{idTarefa}")
-    @Transactional
     public ResponseEntity<ListagemTarefaDto> retornarTarefaPeloId(@PathVariable Long idTarefa){
         ListagemTarefaDto listagemTarefa = tarefaService.buscarTarefaPeloId(idTarefa);
 
@@ -51,7 +50,6 @@ public class TarefaController {
                             content = @Content(mediaType = "application/json"))
             })
     @GetMapping("/usuario/{idUsuario}")
-    @Transactional
     public ResponseEntity<List<ListagemTarefaDto>> retornarTodasTarefasDeUmUsuario(@PathVariable Long idUsuario){
         List<ListagemTarefaDto> listagemTarefa = tarefaService.buscarTodasTarefasDeUmUsuario(idUsuario);
 
@@ -69,7 +67,6 @@ public class TarefaController {
                             content = @Content(mediaType = "application/json"))
             })
     @GetMapping("/etiqueta/{nomeEtiqueta}/{idUsuario}")
-    @Transactional
     public ResponseEntity<List<ListagemTarefaDto>> buscarTarefasPorEtiquetaDeUmUsuario(@PathVariable String nomeEtiqueta,
                                                                                        @PathVariable Long idUsuario){
         List<ListagemTarefaDto> tarefas = tarefaService.buscarTodasTarefasPorEtiqueta(nomeEtiqueta, idUsuario);

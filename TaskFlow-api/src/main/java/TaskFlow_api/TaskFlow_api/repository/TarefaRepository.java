@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -17,4 +18,24 @@ public interface TarefaRepository extends JpaRepository<Tarefa, Long> {
 
     @Query("SELECT t FROM Tarefa t WHERE t.etiqueta = :etiqueta")
     List<Tarefa> retornarListaDeTarefasPorEtiqueta(Etiqueta etiqueta);
+
+    @Query("SELECT COUNT(t) " +
+            "FROM Tarefa t " +
+            "WHERE t.usuario = :usuario " +
+            "AND t.status = 'FECHADA' " +
+            "AND t.dataFinalizacao BETWEEN :dataInicial AND :dataFinal")
+    Long retornaNumeroDeTarefasConluidasNoPeriodo(Usuario usuario, LocalDateTime dataInicial, LocalDateTime dataFinal);
+
+    @Query("SELECT COUNT(t) " +
+            "FROM Tarefa t " +
+            "WHERE t.usuario = :usuario " +
+            "AND t.status = 'EXPIRADA' " +
+            "AND t.dataFinalizacao BETWEEN :dataInicial AND :dataFinal")
+    Long retornaNumeroDeTarefasExpiradasNoPeriodo(Usuario usuario, LocalDateTime dataInicial, LocalDateTime dataFinal);
+
+    @Query("SELECT COUNT(t) " +
+            "FROM Tarefa t " +
+            "WHERE t.usuario = :usuario " +
+            "AND t.dataFinalizacao BETWEEN :dataInicial AND :dataFinal")
+    Long retornaNumeroDeTarefasNoPeriodo(Usuario usuario, LocalDateTime dataInicial, LocalDateTime dataFinal);
 }

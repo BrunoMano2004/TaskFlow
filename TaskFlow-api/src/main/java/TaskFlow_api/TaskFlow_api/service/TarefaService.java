@@ -15,6 +15,7 @@ import TaskFlow_api.TaskFlow_api.validacoes.tarefa.ValidacoesTarefa;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -43,8 +44,6 @@ public class TarefaService {
                 .findById(idTarefa)
                 .orElseThrow(() -> new ResourceNotFoundException("Tarefa não encontrada!"));
 
-        verificarDataDeExpiracaoTarefa(tarefa);
-
         return new ListagemTarefaDto(tarefa);
     }
 
@@ -54,8 +53,6 @@ public class TarefaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
 
         List<Tarefa> tarefaList = tarefaRepository.retornarListaDeTarefasPorUsuario(usuario);
-
-        tarefaList.forEach(this::verificarDataDeExpiracaoTarefa);
 
         List<ListagemTarefaDto> listagemTarefas = tarefaList.stream()
                 .map(ListagemTarefaDto::new)
@@ -77,8 +74,6 @@ public class TarefaService {
                         .flatMap(e -> tarefaRepository.retornarListaDeTarefasPorEtiqueta(e).stream())
                         .toList();
 
-        tarefas.forEach(this::verificarDataDeExpiracaoTarefa);
-
         List<ListagemTarefaDto> listagemTarefas = tarefas.stream()
                 .map(ListagemTarefaDto::new)
                 .toList();
@@ -99,14 +94,6 @@ public class TarefaService {
         tarefaRepository.save(new Tarefa(cadastroTarefa, etiqueta, usuario));
     }
 
-    private void verificarDataDeExpiracaoTarefa(Tarefa tarefa){
-        LocalDateTime dataAtual = LocalDateTime.now();
-
-        if (tarefa.getDataExpiracao().isEqual(dataAtual) || tarefa.getDataExpiracao().isBefore(dataAtual)){
-            tarefa.setStatus(Status.EXPIRADA);
-        }
-    }
-
     public void concluirTarefa(Long idTarefa) {
 
         Tarefa tarefa = tarefaRepository.findById(idTarefa)
@@ -118,5 +105,20 @@ public class TarefaService {
         } else {
             throw new TaskAlreadyMadeException("Tarefa já concluída!");
         }
+    }
+
+    @Scheduled(cron = "0 * * * * ?")
+    private void verificarDataDeExpiracaoTarefa(){
+
+        List<Tarefa> tarefas = tarefaRepository.findAll();
+
+        tarefas.forEach(tarefa -> {
+            LocalDateTime dataAtual = LocalDateTime.now();
+
+            if ((tarefa.getDataExpiracao().isEqual(dataAtual) || tarefa.getDataExpiracao().isBefore(dataAtual)) && tarefa.getStatus() == Status.ABERTA){
+                tarefa.setStatus(Status.EXPIRADA);
+                tarefa.setDataFinalizacao(tarefa.getDataExpiracao());
+            }
+        });
     }
 }

@@ -88,7 +88,7 @@ class ValidarSeONomeDaTarefaJaNaoExisteTest {
             validacao.validar(cadastroTarefa);
         });
 
-        assertEquals("Nome da tarefa já existente! ", ex.getMessage());
+        assertEquals("Nome da tarefa já existente!", ex.getMessage());
     }
 
     @Test
