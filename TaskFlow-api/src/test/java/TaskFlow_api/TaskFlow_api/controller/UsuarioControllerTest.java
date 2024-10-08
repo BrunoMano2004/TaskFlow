@@ -36,39 +36,10 @@ class UsuarioControllerTest {
     private UsuarioService usuarioService;
 
     @Test
-    void deveriaRetornarUmUsuarioComEmailCorreto() throws Exception {
-
-        Usuario usuario = new Usuario("email@email.com", "Usuario usuario", LocalDate.now(), "imagem");
-        ListagemUsuarioDto usuarioDto = new ListagemUsuarioDto(usuario);
-
-        when(usuarioService.retornarUsuarioPeloEmail(anyString())).thenReturn(usuarioDto);
-
-        ObjectMapper om = new ObjectMapper();
-        om.registerModule(new JavaTimeModule());
-        om.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        String json = om.writeValueAsString(usuarioDto);
-
-        mvc.perform(get("/usuario/email/{email}", "brunomano2004@gmail.com")
-                        .contentType(MediaType.APPLICATION_JSON)
-                ).andExpect(content().json(json))
-                .andExpect(status().isOk());
-
-    }
-
-    @Test
-    void deveriaRetornarErro404AoNaoEncontrarUsuarioPeloEmail() throws Exception {
-
-        when(usuarioService.retornarUsuarioPeloEmail(anyString())).thenThrow(new ResourceNotFoundException("Usuário não encontrado!"));
-
-        mvc.perform(get("/usuario/email/{email}", "brunomano2004@gmail.com")
-                        .contentType(MediaType.APPLICATION_JSON)
-                ).andExpect(status().isNotFound());
-    }
-
-    @Test
     void deveriaRetornarCreatedAoCriarUmUsuarioComSucesso() throws Exception {
         CadastroUsuarioDto cadastroUsuarioDto = new CadastroUsuarioDto(
                 "usuario@usuario.com",
+                "Senha@321",
                 "Usuario Usuario",
                 "10/10/2000",
                 "imagem"

@@ -113,20 +113,20 @@ public class Usuario {
     public void atualizarUsuario(AtualizacaoUsuarioDto atualizacaoUsuario){
         DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        if (!(atualizacaoUsuario.email() == null)){
+        if (!(atualizacaoUsuario.email() == null || atualizacaoUsuario.email().isBlank())){
             this.email = atualizacaoUsuario.email();
         }
-        if (!(atualizacaoUsuario.nomeCompleto().isBlank())){
+        if (!(atualizacaoUsuario.nomeCompleto() == null || atualizacaoUsuario.nomeCompleto().isBlank())){
             this.nomeCompleto = atualizacaoUsuario.nomeCompleto();
         }
-        if (!(atualizacaoUsuario.dataNascimento() == null)){
+        if (!(atualizacaoUsuario.dataNascimento() == null || atualizacaoUsuario.dataNascimento().isBlank())){
             try {
                 this.dataNascimento = LocalDate.parse(atualizacaoUsuario.dataNascimento(), sdf);
             } catch (DateTimeParseException e) {
                 throw new InvalidDataException("Data digitada está incorreta!");
             }
         }
-        if (!(atualizacaoUsuario.imgPerfil() == null)){
+        if (!(atualizacaoUsuario.imgPerfil() == null || atualizacaoUsuario.imgPerfil().isBlank())){
             this.email = atualizacaoUsuario.imgPerfil();
         }
     }

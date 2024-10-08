@@ -10,6 +10,11 @@ public record CadastroUsuarioDto(
         @NotBlank(message = "Email não deve estar vazio!")
         String email,
 
+        @NotBlank
+        @Pattern(regexp = "^(?=.*[!@#$%^&*()_+{}:\"<>?\\[\\]\\\\;',./`~\\-])(?=.*[0-9])(?=.*[A-Z]).{5,}$",
+                message = "A senha deve conter pelo menos um caractere especial, um número, uma letra maiúscula e ter pelo menos 5 caracteres.")
+        String senha,
+
         @NotBlank(message = "Nome não deve estar vazio!")
         @Pattern(regexp = "^[a-zA-ZÀ-ÿ\\s]+$", message = "Nome deve conter somente letras!")
         String nomeCompleto,

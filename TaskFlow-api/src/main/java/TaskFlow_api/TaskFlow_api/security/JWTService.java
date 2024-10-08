@@ -1,7 +1,9 @@
 package TaskFlow_api.TaskFlow_api.security;
 
+import TaskFlow_api.TaskFlow_api.exception.InvalidJwtTokenException;
 import TaskFlow_api.TaskFlow_api.model.Login;
 import TaskFlow_api.TaskFlow_api.model.Usuario;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +23,27 @@ public class JWTService {
     private String secret;
 
     public String gerarToken(Login login){
-        return JWT.create()
-                .sign(Algorithm.HMAC256(secret));
+        try {
+            return JWT.create()
+                    .withIssuer("TaskFlow API")
+                    .withSubject(login.getUsername())
+                    .withExpiresAt(dataExpiracao())
+                    .sign(Algorithm.HMAC256(secret));
+        } catch (JWTCreationException e){
+            throw new SecurityException("Erro ao gerar o token JWT");
+        }
+    }
+
+    public String getSubject(String token){
+        try {
+            return JWT.require(Algorithm.HMAC256(secret))
+                    .withIssuer("TaskFlow API")
+                    .build()
+                    .verify(token)
+                    .getSubject();
+        } catch (JWTVerificationException e){
+            throw new InvalidJwtTokenException("Token inválido ou expirado");
+        }
     }
 
     private Instant dataExpiracao() {

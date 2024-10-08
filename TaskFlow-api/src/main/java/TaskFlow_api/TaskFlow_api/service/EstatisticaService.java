@@ -38,8 +38,7 @@ public class EstatisticaService {
 
     public EstatisticaDto gerarEstatisticasPorPeriodo(DadosPeriodoDto dadosPeriodo) {
 
-        Usuario usuario = usuarioRepository.findById(dadosPeriodo.idUsuario())
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
+        Usuario usuario = SecurityContextService.retornarLogin().getUsuario();
 
         try {
             dataInicialParse = LocalDate.parse(dadosPeriodo.dataInicio(), dtf).atStartOfDay();

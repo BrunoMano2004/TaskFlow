@@ -7,6 +7,7 @@ import TaskFlow_api.TaskFlow_api.model.Tarefa;
 import TaskFlow_api.TaskFlow_api.model.Usuario;
 import TaskFlow_api.TaskFlow_api.repository.TarefaRepository;
 import TaskFlow_api.TaskFlow_api.repository.UsuarioRepository;
+import TaskFlow_api.TaskFlow_api.service.SecurityContextService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +24,7 @@ public class ValidarSeONomeDaTarefaJaNaoExiste implements ValidacoesTarefa{
 
     @Override
     public void validar(CadastroTarefaDto cadastroTarefa) {
-        Usuario usuario = usuarioRepository.findById(cadastroTarefa.idUsuario()).get();
+        Usuario usuario = SecurityContextService.retornarLogin().getUsuario();
 
         List<Tarefa> tarefas = tarefaRepository.retornarListaDeTarefasPorUsuario(usuario);
 

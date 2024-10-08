@@ -19,9 +19,6 @@ public record CadastroTarefaDto(
         String dataExpiracao,
 
         @NotNull
-        Long idEtiqueta,
-
-        @NotNull
-        Long idUsuario
+        Long idEtiqueta
 ) {
 }

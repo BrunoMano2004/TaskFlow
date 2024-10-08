@@ -40,18 +40,15 @@ public class TarefaController {
     }
 
     @Operation(summary = "Retorna todas as tarefas de um usuário",
-            description = "Busca e retorna todas as tarefas de um usuário através do id do mesmo",
+            description = "Busca e retorna todas as tarefas de um usuário",
             responses = {
                     @ApiResponse(responseCode = "200",
                             description = "Retorna lista de tarefas encontradas com sucesso",
-                            content = @Content(mediaType = "application/json")),
-                    @ApiResponse(responseCode = "404",
-                            description = "Usuario não encontrado com o id especificado",
                             content = @Content(mediaType = "application/json"))
             })
-    @GetMapping("/usuario/{idUsuario}")
-    public ResponseEntity<List<ListagemTarefaDto>> retornarTodasTarefasDeUmUsuario(@PathVariable Long idUsuario){
-        List<ListagemTarefaDto> listagemTarefa = tarefaService.buscarTodasTarefasDeUmUsuario(idUsuario);
+    @GetMapping("/usuario")
+    public ResponseEntity<List<ListagemTarefaDto>> retornarTodasTarefasDeUmUsuario(){
+        List<ListagemTarefaDto> listagemTarefa = tarefaService.buscarTodasTarefasDeUmUsuario();
 
         return ResponseEntity.ok(listagemTarefa);
     }
@@ -61,15 +58,11 @@ public class TarefaController {
             responses = {
                     @ApiResponse(responseCode = "200",
                             description = "Retorna lista de tarefas encontradas com sucesso",
-                            content = @Content(mediaType = "application/json")),
-                    @ApiResponse(responseCode = "404",
-                            description = "Usuario não encontrado com o id especificado",
                             content = @Content(mediaType = "application/json"))
             })
-    @GetMapping("/etiqueta/{nomeEtiqueta}/{idUsuario}")
-    public ResponseEntity<List<ListagemTarefaDto>> buscarTarefasPorEtiquetaDeUmUsuario(@PathVariable String nomeEtiqueta,
-                                                                                       @PathVariable Long idUsuario){
-        List<ListagemTarefaDto> tarefas = tarefaService.buscarTodasTarefasPorEtiqueta(nomeEtiqueta, idUsuario);
+    @GetMapping("/etiqueta/{nomeEtiqueta}")
+    public ResponseEntity<List<ListagemTarefaDto>> buscarTarefasPorEtiquetaDeUmUsuario(@PathVariable String nomeEtiqueta){
+        List<ListagemTarefaDto> tarefas = tarefaService.buscarTodasTarefasPorEtiqueta(nomeEtiqueta);
         return ResponseEntity.ok(tarefas);
     }
 
@@ -78,7 +71,7 @@ public class TarefaController {
                         description = "Tarefa criada com sucesso",
                         content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404",
-                        description = "Usuário ou etiqueta não encontrado",
+                        description = "Etiqueta não encontrada",
                         content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400",
                         description = "Algum dado digitado de forma inválida",

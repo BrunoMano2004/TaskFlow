@@ -9,9 +9,13 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TarefaRepository extends JpaRepository<Tarefa, Long> {
+
+    @Query("SELECT t FROM Tarefa t WHERE t.id = :idTarefa AND t.usuario = :usuario")
+    Optional<Tarefa> retornarTarefaDeUmUsuarioPeloId(Long idTarefa, Usuario usuario);
 
     @Query("SELECT t FROM Tarefa t WHERE t.usuario = :usuario")
     List<Tarefa> retornarListaDeTarefasPorUsuario(Usuario usuario);

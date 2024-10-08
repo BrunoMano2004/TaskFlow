@@ -22,9 +22,8 @@ public class EtiquetaService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public List<ListagemEtiquetaDto> buscarEtiqueta(String nomeEtiqueta, Long idUsuario) {
-        Usuario usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario não encontrado!"));
+    public List<ListagemEtiquetaDto> buscarEtiqueta(String nomeEtiqueta) {
+        Usuario usuario = SecurityContextService.retornarLogin().getUsuario();
 
         List<Etiqueta> etiquetas = etiquetaRepository.retornarEtiquetaComNomeEUsuario(nomeEtiqueta, usuario);
 
@@ -35,9 +34,8 @@ public class EtiquetaService {
         return listagemEtiquetas;
     }
 
-    public List<ListagemEtiquetaDto> retornarTodasEtiquetasPorUsuario(String emailUsuario) {
-        Usuario usuario = usuarioRepository.findByEmail(emailUsuario)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
+    public List<ListagemEtiquetaDto> retornarTodasEtiquetasPorUsuario() {
+        Usuario usuario = SecurityContextService.retornarLogin().getUsuario();
 
         List<Etiqueta> etiquetas = etiquetaRepository.retornarEtiquetaPorUsuario(usuario.getId());
 
@@ -49,8 +47,7 @@ public class EtiquetaService {
     }
 
     public void cadastrarEtiqueta(@Valid CadastroEtiquetaDto cadastroEtiqueta) {
-        Usuario usuario = usuarioRepository.findById(cadastroEtiqueta.usuarioId())
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
+        Usuario usuario = SecurityContextService.retornarLogin().getUsuario();
 
         etiquetaRepository.save(new Etiqueta(cadastroEtiqueta, usuario));
     }
@@ -64,8 +61,10 @@ public class EtiquetaService {
     }
 
     public ListagemEtiquetaDto retornarEtiquetaPeloId(Long idEtiqueta) {
+        Usuario usuario = SecurityContextService.retornarLogin().getUsuario();
+
         Etiqueta etiqueta = etiquetaRepository
-                .findById(idEtiqueta)
+                .retornarEtiquetaDeUmUsuarioPeloId(idEtiqueta, usuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Etiqueta não encontrada!"));
 
         return new ListagemEtiquetaDto(etiqueta);

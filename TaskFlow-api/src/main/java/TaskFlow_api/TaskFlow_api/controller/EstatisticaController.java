@@ -28,7 +28,7 @@ public class EstatisticaController {
                             description = "Sem tarefa finalizada ou expirada no período, ou usuário não encontrado",
                             content = @Content(mediaType = "application/json"))
             })
-    @GetMapping("/{idUsuario}/periodo")
+    @GetMapping("/periodo")
     public ResponseEntity<EstatisticaDto> estatisticaPorPeriodo(@RequestBody @Valid DadosPeriodoDto dadosPeriodo){
         EstatisticaDto estatisticas = estatisticaService.gerarEstatisticasPorPeriodo(dadosPeriodo);
         return ResponseEntity.ok(estatisticas);

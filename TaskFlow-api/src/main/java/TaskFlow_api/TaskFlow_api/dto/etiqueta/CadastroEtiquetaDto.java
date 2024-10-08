@@ -12,9 +12,6 @@ public record CadastroEtiquetaDto(
 
         @Pattern(regexp = "^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$", message = "A cor deve seguir o padrão de hashcode!")
         @NotBlank(message = "Cor não pode estar em branco!")
-        String cor,
-
-        @NotNull
-        Long usuarioId
+        String cor
 ) {
 }

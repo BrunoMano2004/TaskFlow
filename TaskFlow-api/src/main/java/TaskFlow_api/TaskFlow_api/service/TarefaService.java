@@ -40,17 +40,18 @@ public class TarefaService {
     private List<ValidacoesTarefa> validadores;
 
     public ListagemTarefaDto buscarTarefaPeloId(Long idTarefa) {
+        Usuario usuario = SecurityContextService.retornarLogin().getUsuario();
+
         Tarefa tarefa = tarefaRepository
-                .findById(idTarefa)
+                .retornarTarefaDeUmUsuarioPeloId(idTarefa, usuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Tarefa não encontrada!"));
 
         return new ListagemTarefaDto(tarefa);
     }
 
-    public List<ListagemTarefaDto> buscarTodasTarefasDeUmUsuario(Long idUsuario) {
+    public List<ListagemTarefaDto> buscarTodasTarefasDeUmUsuario() {
 
-        Usuario usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
+        Usuario usuario = SecurityContextService.retornarLogin().getUsuario();
 
         List<Tarefa> tarefaList = tarefaRepository.retornarListaDeTarefasPorUsuario(usuario);
 
@@ -62,9 +63,8 @@ public class TarefaService {
     }
 
 
-    public List<ListagemTarefaDto> buscarTodasTarefasPorEtiqueta(String nomeEtiqueta, Long idUsuario) {
-        Usuario usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
+    public List<ListagemTarefaDto> buscarTodasTarefasPorEtiqueta(String nomeEtiqueta) {
+        Usuario usuario = SecurityContextService.retornarLogin().getUsuario();
 
         List<Etiqueta> etiquetasEncontradas = etiquetaRepository
                 .retornarEtiquetaComNomeEUsuario(nomeEtiqueta, usuario);
@@ -83,8 +83,7 @@ public class TarefaService {
 
     public void criarTarefa(CadastroTarefaDto cadastroTarefa) {
 
-        Usuario usuario = usuarioRepository.findById(cadastroTarefa.idUsuario())
-                        .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado!"));
+        Usuario usuario = SecurityContextService.retornarLogin().getUsuario();
 
         Etiqueta etiqueta = etiquetaRepository.findById(cadastroTarefa.idEtiqueta())
                         .orElseThrow(() -> new ResourceNotFoundException("Etiqueta não encontrada!"));
@@ -95,8 +94,10 @@ public class TarefaService {
     }
 
     public void concluirTarefa(Long idTarefa) {
+        Usuario usuario = SecurityContextService.retornarLogin().getUsuario();
 
-        Tarefa tarefa = tarefaRepository.findById(idTarefa)
+        Tarefa tarefa = tarefaRepository
+                .retornarTarefaDeUmUsuarioPeloId(idTarefa, usuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Tarefa não encontrada!"));
 
         if (tarefa.getStatus() == Status.ABERTA){

@@ -36,32 +36,25 @@ public class EtiquetaController {
         return ResponseEntity.ok(listagemEtiqueta);
     }
 
-    @Operation(summary = "Retorna etiqueta", description = "Retorna etiqueta única de um usuário pelo nome da etiqueta e pelo id do usuário", responses = {
+    @Operation(summary = "Retorna etiqueta", description = "Retorna etiquetas de um usuário pelo nome", responses = {
             @ApiResponse(responseCode = "200",
                     description = "Retorna etiqueta com sucesso",
-                    content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "404",
-                    description = "Usuario não encontrado",
                     content = @Content(mediaType = "application/json"))
     })
-    @GetMapping("/{nomeEtiqueta}/{idUsuario}")
-    public ResponseEntity<List<ListagemEtiquetaDto>> buscarEtiquetaPeloNome(@PathVariable String nomeEtiqueta,
-                                                                     @PathVariable Long idUsuario){
-        List<ListagemEtiquetaDto> listagemEtiqueta = etiquetaService.buscarEtiqueta(nomeEtiqueta, idUsuario);
+    @GetMapping("/{nomeEtiqueta}")
+    public ResponseEntity<List<ListagemEtiquetaDto>> buscarEtiquetaPeloNome(@PathVariable String nomeEtiqueta){
+        List<ListagemEtiquetaDto> listagemEtiqueta = etiquetaService.buscarEtiqueta(nomeEtiqueta);
         return ResponseEntity.ok(listagemEtiqueta);
     }
 
     @Operation(summary = "Retorna lista de etiquetas", description = "Retorna a lista de etiquetas que um usuário possui", responses = {
             @ApiResponse(responseCode = "200",
                         description = "Retorna lista de etiquetas, mesmo estando vazia",
-                        content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "404",
-                        description = "Usuário não encontrado!",
-                        content = @Content(mediaType = "Application/json"))
+                        content = @Content(mediaType = "application/json"))
     })
-    @GetMapping("/usuario/{emailUsuario}")
-    public ResponseEntity<List<ListagemEtiquetaDto>> listarTodasEtiquetasPorUsuario(@PathVariable String emailUsuario){
-        List<ListagemEtiquetaDto> listaEtiquetas = etiquetaService.retornarTodasEtiquetasPorUsuario(emailUsuario);
+    @GetMapping("/usuario")
+    public ResponseEntity<List<ListagemEtiquetaDto>> listarTodasEtiquetasPorUsuario(){
+        List<ListagemEtiquetaDto> listaEtiquetas = etiquetaService.retornarTodasEtiquetasPorUsuario();
         return ResponseEntity.ok(listaEtiquetas);
     }
 
