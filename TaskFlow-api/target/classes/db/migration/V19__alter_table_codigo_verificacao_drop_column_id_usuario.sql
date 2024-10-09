@@ -1,0 +1,1 @@
+alter table codigo_verificacao drop column id_usuario

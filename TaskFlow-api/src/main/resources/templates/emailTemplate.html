@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificação de E-mail - TaskFlow</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            margin-top: 50px;
+            border: none;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header text-center">
+            <h2>TaskFlow - Confirmação de E-mail</h2>
+        </div>
+        <div class="card-body text-center">
+            <img src="https://via.placeholder.com/150" alt="Logo" class="img-fluid mb-3">
+            <h4>Seu código de verificação é: ${codigoVerificacao}</h4>
+            <h1 class="text-primary">${verificationCode}</h1>
+            <p>Por favor, insira este código para completar seu cadastro.</p>
+            <a href="#" class="btn btn-primary">Verificar Código</a>
+        </div>
+        <div class="card-footer text-muted text-center">
+            <p>Se você não solicitou este e-mail, pode ignorá-lo.</p>
+            <img src="https://via.placeholder.com/100" alt="Imagem de Rodapé" class="img-fluid">
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

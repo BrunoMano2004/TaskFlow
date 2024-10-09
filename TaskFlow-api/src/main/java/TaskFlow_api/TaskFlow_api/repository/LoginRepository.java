@@ -5,10 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
-public interface LoginReposiory extends JpaRepository<Login, Long> {
+public interface LoginRepository extends JpaRepository<Login, Long> {
 
     UserDetails findByUsername(String username);
 }

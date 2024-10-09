@@ -1,6 +1,7 @@
 package TaskFlow_api.TaskFlow_api.model;
 
 import jakarta.persistence.*;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,6 +18,8 @@ public class Login implements UserDetails {
     private String username;
 
     private String password;
+
+    private boolean ativo;
 
     @JoinColumn(name = "id_usuario")
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -67,7 +70,7 @@ public class Login implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return ativo;
     }
 
     public void setUsername(String username) {
@@ -93,5 +96,13 @@ public class Login implements UserDetails {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 }

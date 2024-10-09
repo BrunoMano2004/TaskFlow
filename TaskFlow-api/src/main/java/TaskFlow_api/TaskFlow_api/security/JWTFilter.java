@@ -1,15 +1,12 @@
 package TaskFlow_api.TaskFlow_api.security;
 
-import TaskFlow_api.TaskFlow_api.exception.InvalidJwtTokenException;
-import TaskFlow_api.TaskFlow_api.model.Login;
-import TaskFlow_api.TaskFlow_api.repository.LoginReposiory;
+import TaskFlow_api.TaskFlow_api.repository.LoginRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -23,7 +20,7 @@ public class JWTFilter extends OncePerRequestFilter {
     private JWTService jwtService;
 
     @Autowired
-    private LoginReposiory loginReposiory;
+    private LoginRepository loginRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -32,7 +29,7 @@ public class JWTFilter extends OncePerRequestFilter {
         if (token != null){
             String username = jwtService.getSubject(token);
 
-            var login = loginReposiory.findByUsername(username);
+            var login = loginRepository.findByUsername(username);
 
             var authentication = new UsernamePasswordAuthenticationToken(login, null, null);
             SecurityContextHolder.getContext().setAuthentication(authentication);

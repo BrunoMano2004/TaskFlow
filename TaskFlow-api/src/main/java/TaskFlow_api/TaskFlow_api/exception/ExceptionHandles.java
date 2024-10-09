@@ -57,6 +57,11 @@ public class ExceptionHandles {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(InvalidValidationCodeException.class)
+    public ResponseEntity<String> tratarCodigoDeValidacaoIncorretoOuInvalido(InvalidValidationCodeException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     public record ErroBeanValidation(
             String campo,
             String mensagem

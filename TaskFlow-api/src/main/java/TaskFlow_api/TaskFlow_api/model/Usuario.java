@@ -5,13 +5,14 @@ import TaskFlow_api.TaskFlow_api.dto.usuario.CadastroUsuarioDto;
 import TaskFlow_api.TaskFlow_api.exception.InvalidDataException;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
 @Entity
-public class Usuario {
+public class Usuario implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -127,7 +128,7 @@ public class Usuario {
             }
         }
         if (!(atualizacaoUsuario.imgPerfil() == null || atualizacaoUsuario.imgPerfil().isBlank())){
-            this.email = atualizacaoUsuario.imgPerfil();
+            this.imgPerfil = atualizacaoUsuario.imgPerfil();
         }
     }
 }

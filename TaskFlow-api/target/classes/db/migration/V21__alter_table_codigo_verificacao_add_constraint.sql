@@ -1,0 +1,1 @@
+alter table codigo_verificacao add constraint fk_login foreign key (id_login) references login(id)

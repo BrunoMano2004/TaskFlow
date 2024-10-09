@@ -7,12 +7,15 @@ import TaskFlow_api.TaskFlow_api.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/usuario")
@@ -45,7 +48,7 @@ public class UsuarioController {
     })
     @PostMapping
     @Transactional
-    public ResponseEntity<String> cadastrarUsuario(@RequestBody @Valid CadastroUsuarioDto cadastroUsuario){
+    public ResponseEntity<String> cadastrarUsuario(@RequestBody @Valid CadastroUsuarioDto cadastroUsuario) throws MessagingException, IOException {
         usuarioService.cadastrarUsuario(cadastroUsuario);
         return new ResponseEntity<>("Usuário criado com sucesso!", HttpStatus.CREATED);
     }

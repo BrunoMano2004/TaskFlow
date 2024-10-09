@@ -3,16 +3,17 @@ package TaskFlow_api.TaskFlow_api.service;
 import TaskFlow_api.TaskFlow_api.dto.usuario.AtualizacaoUsuarioDto;
 import TaskFlow_api.TaskFlow_api.dto.usuario.CadastroUsuarioDto;
 import TaskFlow_api.TaskFlow_api.dto.usuario.ListagemUsuarioDto;
-import TaskFlow_api.TaskFlow_api.exception.ResourceNotFoundException;
 import TaskFlow_api.TaskFlow_api.model.Login;
 import TaskFlow_api.TaskFlow_api.model.Usuario;
-import TaskFlow_api.TaskFlow_api.repository.LoginReposiory;
+import TaskFlow_api.TaskFlow_api.repository.LoginRepository;
 import TaskFlow_api.TaskFlow_api.repository.UsuarioRepository;
 import TaskFlow_api.TaskFlow_api.validacoes.usuario.ValidacoesUsuario;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -22,7 +23,10 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
-    private LoginReposiory loginReposiory;
+    private CodigoVerificacaoService codigoService;
+
+    @Autowired
+    private LoginRepository loginRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -33,13 +37,15 @@ public class UsuarioService {
     @Autowired
     private List<ValidacoesUsuario<AtualizacaoUsuarioDto>> validacoesUsuarioAtualizacao;
 
-    public void cadastrarUsuario(CadastroUsuarioDto cadastroUsuario) {
+    public void cadastrarUsuario(CadastroUsuarioDto cadastroUsuario) throws MessagingException, IOException {
         validacoesUsuarioCadastro.forEach(v -> v.validar(cadastroUsuario));
 
         Usuario usuario = new Usuario(cadastroUsuario);
-
         usuarioRepository.save(usuario);
-        loginReposiory.save(new Login(cadastroUsuario.email(), passwordEncoder.encode(cadastroUsuario.senha()), usuario));
+
+        Login login = new Login(cadastroUsuario.email(), passwordEncoder.encode(cadastroUsuario.senha()), usuario);
+        loginRepository.save(login);
+        codigoService.gerarCodigo(login);
     }
 
     public ListagemUsuarioDto atualizarUsuario(AtualizacaoUsuarioDto atualizacaoUsuario) {
