@@ -45,7 +45,7 @@ public class UsuarioService {
 
         Login login = new Login(cadastroUsuario.email(), passwordEncoder.encode(cadastroUsuario.senha()), usuario);
         loginRepository.save(login);
-        codigoService.gerarCodigo(login);
+        codigoService.gerarCodigo(login.getUsername());
     }
 
     public ListagemUsuarioDto atualizarUsuario(AtualizacaoUsuarioDto atualizacaoUsuario) {

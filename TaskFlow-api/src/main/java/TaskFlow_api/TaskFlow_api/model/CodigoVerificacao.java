@@ -17,6 +17,7 @@ public class CodigoVerificacao {
 
     private LocalDateTime dataExpiracao;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_login")
     private Login login;
 
@@ -31,9 +32,9 @@ public class CodigoVerificacao {
         this.login = login;
     }
 
-    public CodigoVerificacao(String codigo, LocalDateTime dataCriacao, Login login) {
+    public CodigoVerificacao(String codigo, LocalDateTime dataExpiracao, Login login) {
         this.codigo = codigo;
-        this.dataCriacao = dataCriacao;
+        this.dataExpiracao = dataExpiracao;
         this.login = login;
     }
 
