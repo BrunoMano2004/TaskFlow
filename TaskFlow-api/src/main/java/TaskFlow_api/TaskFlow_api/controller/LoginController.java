@@ -1,5 +1,6 @@
 package TaskFlow_api.TaskFlow_api.controller;
 
+import TaskFlow_api.TaskFlow_api.dto.jwtToken.JwtTokenDto;
 import TaskFlow_api.TaskFlow_api.dto.login.LoginDto;
 import TaskFlow_api.TaskFlow_api.model.Login;
 import TaskFlow_api.TaskFlow_api.security.JWTService;
@@ -13,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.PasswordAuthentication;
-
 @RestController
 @RequestMapping("/login")
 public class LoginController {
@@ -26,13 +25,13 @@ public class LoginController {
     private JWTService jwtService;
 
     @PostMapping
-    public ResponseEntity<String> login(@RequestBody @Valid LoginDto loginDto){
+    public ResponseEntity<JwtTokenDto> login(@RequestBody @Valid LoginDto loginDto){
 
         var authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.username(), loginDto.password());
         var authentication = manager.authenticate(authenticationToken);
 
         var tokenJwt = jwtService.gerarToken((Login) authentication.getPrincipal());
 
-        return ResponseEntity.ok(tokenJwt);
+        return ResponseEntity.ok(new JwtTokenDto(tokenJwt));
     }
 }
