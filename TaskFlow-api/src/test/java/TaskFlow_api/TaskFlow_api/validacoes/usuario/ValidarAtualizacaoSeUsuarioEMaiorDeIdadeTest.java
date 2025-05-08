@@ -30,6 +30,7 @@ class ValidarAtualizacaoSeUsuarioEMaiorDeIdadeTest {
 
         CadastroUsuarioDto cadastroUsuario = new CadastroUsuarioDto(
                 "emailemail@email.com",
+                "senha123",
                 "Usuario Usuario",
                 "10/10/2000",
                 "imagem"

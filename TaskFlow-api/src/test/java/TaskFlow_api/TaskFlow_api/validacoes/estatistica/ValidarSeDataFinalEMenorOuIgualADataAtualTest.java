@@ -25,7 +25,6 @@ class ValidarSeDataFinalEMenorOuIgualADataAtualTest {
     void naoDeveriaCairNaExcecaoComDataMenorOuIgualDoQueDataAtual(){
 
         DadosPeriodoDto dadosPeriodo = new DadosPeriodoDto(
-                1L,
                 "01/01/2020",
                 LocalDate.now().minusDays(1L).format(dtf));
 
@@ -38,7 +37,6 @@ class ValidarSeDataFinalEMenorOuIgualADataAtualTest {
     void deveriaCairNaExcecaoComDataMaiorDoQueDataAtual(){
 
         DadosPeriodoDto dadosPeriodo = new DadosPeriodoDto(
-                1L,
                 "01/01/2020",
                 LocalDate.now().plusDays(1L).format(dtf));
 

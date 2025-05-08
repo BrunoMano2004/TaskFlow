@@ -19,6 +19,7 @@ class ValidarCadastroSeLinkEValidoTest {
     void deveriaCairNaExcecaoComLinkSemImagem(){
         CadastroUsuarioDto cadastroUsuario = new CadastroUsuarioDto(
                 "email@email.com",
+                "senha123",
                 "Usuario Usuario",
                 "10/10/2004",
                 "https://www.google.com.br/"
@@ -33,6 +34,7 @@ class ValidarCadastroSeLinkEValidoTest {
     void deveriaCairNaExcecaoComLinkInvalido(){
         CadastroUsuarioDto cadastroUsuario = new CadastroUsuarioDto(
                 "email@email.com",
+                "senha123",
                 "Usuario Usuario",
                 "10/10/2004",
                 "fefeg"
@@ -47,6 +49,7 @@ class ValidarCadastroSeLinkEValidoTest {
     void naoDeveriaCairNaExcecaoComLinkValido(){
         CadastroUsuarioDto cadastroUsuario = new CadastroUsuarioDto(
                 "email@email.com",
+                "senha123",
                 "Usuario Usuario",
                 "10/10/2004",
                 "https://i.pinimg.com/236x/5f/33/c7/5f33c741560bb71ebedb831267603c1b.jpg"

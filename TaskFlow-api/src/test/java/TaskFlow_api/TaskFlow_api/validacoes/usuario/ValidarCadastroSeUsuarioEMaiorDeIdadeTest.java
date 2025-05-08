@@ -22,6 +22,7 @@ class ValidarCadastroSeUsuarioEMaiorDeIdadeTest {
     void deveriaCairNaExcecaoDeDadosIncorretosComDataDeNascimentoMaiorDoQueDataAtual(){
         CadastroUsuarioDto cadastroUsuario = new CadastroUsuarioDto(
                 "emailemail@email.com",
+                "senha123",
                 "Usuario Usuario",
                 "10/10/2050",
                 "imagem"
@@ -43,6 +44,7 @@ class ValidarCadastroSeUsuarioEMaiorDeIdadeTest {
 
         CadastroUsuarioDto cadastroUsuario = new CadastroUsuarioDto(
                 "emailemail@email.com",
+                "senha123",
                 "Usuario Usuario",
                 data,
                 "imagem"
@@ -59,6 +61,7 @@ class ValidarCadastroSeUsuarioEMaiorDeIdadeTest {
     void naoDeveriaCairNaExcecaoDeDadosIncorretosComDadosCorretos(){
         CadastroUsuarioDto cadastroUsuario = new CadastroUsuarioDto(
                 "emailemail@email.com",
+                "senha123",
                 "Usuario Usuario",
                 "10/10/2004",
                 "imagem"

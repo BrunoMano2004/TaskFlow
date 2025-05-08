@@ -37,7 +37,6 @@ class ValidarSeDataDeExpiracaoEMaiorQueDataAtualTest {
                 "Criar curriculo",
                 "Criar curriculo",
                 LocalDateTime.now().minusDays(2L).format(dtf),
-                1L,
                 1L
         );
 
@@ -57,7 +56,6 @@ class ValidarSeDataDeExpiracaoEMaiorQueDataAtualTest {
                 "Criar curriculo",
                 "Criar curriculo",
                 LocalDateTime.now().plusDays(2L).format(dtf),
-                1L,
                 1L
         );
 
