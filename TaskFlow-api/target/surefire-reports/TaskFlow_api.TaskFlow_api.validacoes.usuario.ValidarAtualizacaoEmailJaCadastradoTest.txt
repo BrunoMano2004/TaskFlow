@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: TaskFlow_api.TaskFlow_api.validacoes.usuario.ValidarAtualizacaoEmailJaCadastradoTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in TaskFlow_api.TaskFlow_api.validacoes.usuario.ValidarAtualizacaoEmailJaCadastradoTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.132 s -- in TaskFlow_api.TaskFlow_api.validacoes.usuario.ValidarAtualizacaoEmailJaCadastradoTest

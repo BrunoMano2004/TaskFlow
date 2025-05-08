@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: TaskFlow_api.TaskFlow_api.validacoes.estatistica.ValidarSeDataFinalEMenorOuIgualADataAtualTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.039 s -- in TaskFlow_api.TaskFlow_api.validacoes.estatistica.ValidarSeDataFinalEMenorOuIgualADataAtualTest
