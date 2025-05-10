@@ -1,8 +1,12 @@
 version: '3.8'
 services:
   taskflow-api:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      platform: linux/arm/v7       # força o build para ARM32v7 :contentReference[oaicite:0]{index=0}
     image: brunomano/taskflow-api:latest
+    platform: linux/arm/v7         # puxa/executa a variante ARM32v7 no Compose :contentReference[oaicite:1]{index=1}
     ports:
-      - "8080:8080"
-    restart: always
+      - "8080:8080"                # expõe porta 8080 do host para o container :contentReference[oaicite:2]{index=2}
+    restart: always                # reinicia automaticamente em falhas ou reboot :contentReference[oaicite:3]{index=3}
