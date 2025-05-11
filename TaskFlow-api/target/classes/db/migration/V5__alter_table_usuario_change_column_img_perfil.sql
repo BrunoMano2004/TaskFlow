@@ -1,1 +1,0 @@
-alter table usuario change column img_perfil img_perfil varchar(200)

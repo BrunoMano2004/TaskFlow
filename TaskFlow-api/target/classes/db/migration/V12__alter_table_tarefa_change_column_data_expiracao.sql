@@ -1,1 +1,0 @@
-alter table tarefa change column data_expiracao data_expiracao timestamp not null

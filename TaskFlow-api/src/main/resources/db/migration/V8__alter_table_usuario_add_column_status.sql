@@ -1,1 +1,0 @@
-alter table usuario add column status boolean not null default 1

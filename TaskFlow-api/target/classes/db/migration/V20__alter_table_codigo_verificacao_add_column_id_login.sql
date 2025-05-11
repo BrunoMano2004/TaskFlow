@@ -1,1 +1,0 @@
-alter table codigo_verificacao add column id_login bigint not null

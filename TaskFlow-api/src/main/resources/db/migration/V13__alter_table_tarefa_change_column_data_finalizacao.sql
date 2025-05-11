@@ -1,1 +1,0 @@
-alter table tarefa change column data_finalizacao data_finalizacao timestamp
