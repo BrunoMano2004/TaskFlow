@@ -7,7 +7,6 @@ on:
 
 env:
   IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/taskflow-api
-  KUBECONFIG: ${{ secrets.KUBECONFIG_DATA }}
   TAILSCALE_AUTHKEY: ${{ secrets.TAILSCALE_AUTHKEY }}
 
 jobs:
@@ -42,8 +41,8 @@ jobs:
       - name: Conectar ao Tailscale
         uses: tailscale/github-action@v3
         with:
-          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-          tags: tag:ci
+          authkey: ${{ env.TAILSCALE_AUTHKEY }}
+        # authkey permite conexões sem interação manual :contentReference[oaicite:1]{index=1}
 
       - name: Criar pasta .kube
         run: mkdir -p $HOME/.kube
@@ -52,6 +51,8 @@ jobs:
         run: |
           echo "${{ secrets.KUBECONFIG }}" | base64 --decode > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
+          export KUBECONFIG=$HOME/.kube/config
+        # Seu kubeconfig deve referenciar o IP Tailscale do K3s (ex.: https://100.x.y.z:6443)
 
       - name: Verificar acesso ao cluster
         run: kubectl get nodes
