@@ -1,5 +1,5 @@
-# 1) Build (mantém igual)
-FROM arm32v7/maven:3.9.3-eclipse-temurin-17 AS build
+# Etapa de construção
+FROM eclipse-temurin:17-jdk-jammy AS build
 WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline
@@ -7,10 +7,10 @@ RUN mvn dependency:go-offline
 COPY src ./src
 RUN mvn package -DskipTests
 
-# 2) Runtime: Ubuntu Jammy JRE
-FROM arm32v7/eclipse-temurin:17.0.12_7-jre-jammy AS runtime
+# Etapa de runtime
+FROM eclipse-temurin:17-jre-jammy AS runtime
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
-CMD ["java","-jar","app.jar"]
+CMD ["java", "-jar", "app.jar"]
