@@ -38,6 +38,9 @@ jobs:
           tags: ${{ env.IMAGE_NAME }}:latest
           platforms: linux/amd64
 
+      - name: Criar diretório .kube
+        run: mkdir -p $HOME/.kube
+
       - name: Configurar kubeconfig
         run: |
           echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode > $HOME/.kube/config
