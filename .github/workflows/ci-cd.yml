@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
 
 env:
-  IMAGE_NAME: seu_usuario_dockerhub/minha-api-java
+  IMAGE_NAME: brunomano/taskflow-api
 
 jobs:
   build-and-deploy:
@@ -36,6 +36,7 @@ jobs:
           context: .
           push: true
           tags: ${{ env.IMAGE_NAME }}:latest
+          platforms: linux/amd64
 
       - name: Configurar kubeconfig
         run: |
