@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: taskflow-api
-          image: brunomano/taskflow-api:v3.0.0
+          image: brunomano/taskflow-api:latest
           imagePullPolicy: Always
           envFrom:
             - secretRef:
