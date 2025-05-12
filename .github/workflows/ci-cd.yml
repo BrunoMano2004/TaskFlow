@@ -50,7 +50,7 @@ jobs:
 
       - name: Configurar kubeconfig
         run: |
-          echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode > $HOME/.kube/config
+          echo "${{ secrets.KUBECONFIG }}" | base64 --decode > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
 
       - name: Verificar acesso ao cluster
