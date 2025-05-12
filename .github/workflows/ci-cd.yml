@@ -3,15 +3,12 @@ name: CI/CD Java + K3s
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 env:
-  REGISTRY: docker.io
-  IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/minha-api-java
+  IMAGE_NAME: seu_usuario_dockerhub/minha-api-java
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout do código
@@ -40,24 +37,15 @@ jobs:
           push: true
           tags: ${{ env.IMAGE_NAME }}:latest
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout do código
-        uses: actions/checkout@v3
+      - name: Configurar kubeconfig
+        run: |
+          echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
 
-      - name: Configurar contexto do Kubernetes
-        uses: azure/k8s-set-context@v3
-        with:
-          method: kubeconfig
-          kubeconfig: ${{ secrets.KUBECONFIG }}
+      - name: Verificar acesso ao cluster
+        run: kubectl get nodes
 
       - name: Implantar no cluster K3s
-        uses: azure/k8s-deploy@v4
-        with:
-          manifests: |
-            k8s/deployment.yaml
-            k8s/service.yaml
-          images: |
-            ${{ env.IMAGE_NAME }}:latest
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
