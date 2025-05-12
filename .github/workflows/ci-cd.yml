@@ -69,5 +69,5 @@ jobs:
 
       - name: Implantar no cluster K3s
         run: |
-          kubectl apply -f TaskFlow/k8s/deployment-taskflow.yaml
-          kubectl apply -f TaskFlow/k8s/service-taskflow.yaml
+          kubectl apply -f k8s/deployment-taskflow.yaml
+          kubectl apply -f k8s/service-taskflow.yaml
