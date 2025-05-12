@@ -1,15 +1,19 @@
-name: CI/CD Java + K3s
+name: CI/CD Java + K3s via Tailscale Funnel
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
 
 env:
-  IMAGE_NAME: brunomano/taskflow-api
+  IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/taskflow-api
+  KUBECONFIG: ${{ secrets.KUBECONFIG_DATA }}
+  TAILSCALE_AUTHKEY: ${{ secrets.TAILSCALE_AUTHKEY }}
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout do código
         uses: actions/checkout@v3
@@ -31,19 +35,19 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Construir e enviar imagem Docker
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: ${{ env.IMAGE_NAME }}:latest
-          platforms: linux/amd64
+        run: |
+          docker build -t ${{ env.IMAGE_NAME }}:latest .
+          docker push ${{ env.IMAGE_NAME }}:latest
 
-      - name: Criar diretório .kube
-        run: mkdir -p $HOME/.kube
+      - name: Conectar ao Tailscale
+        uses: tailscale/github-action@v3
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+          tags: tag:ci
 
       - name: Configurar kubeconfig
         run: |
-          echo "${{ secrets.KUBECONFIG }}" | base64 --decode > $HOME/.kube/config
+          echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
 
       - name: Verificar acesso ao cluster
