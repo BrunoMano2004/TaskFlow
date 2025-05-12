@@ -39,20 +39,30 @@ jobs:
           docker push ${{ env.IMAGE_NAME }}:latest
 
       - name: Conectar ao Tailscale
+        id: tailscale
         uses: tailscale/github-action@v3
         with:
           authkey: ${{ env.TAILSCALE_AUTHKEY }}
-        # authkey permite conexões sem interação manual :contentReference[oaicite:1]{index=1}
+          # Authkey ephemeral e reusável para Tailnet Lock :contentReference[oaicite:3]{index=3}
+
+      - name: Obter IP Tailscale do runner
+        id: get-tailscale-ip
+        run: |
+          IP=$(tailscale status -json | jq -r '.Self.TailscaleIPs[0]')
+          echo "TS_IP=$IP" >> "$GITHUB_ENV"
+          # Extração do primeiro IP Tailscale via jq :contentReference[oaicite:4]{index=4}
 
       - name: Criar pasta .kube
         run: mkdir -p $HOME/.kube
 
-      - name: Configurar kubeconfig
+      - name: Configurar kubeconfig com IP Tailscale
         run: |
-          echo "${{ secrets.KUBECONFIG }}" | base64 --decode > $HOME/.kube/config
+          echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode \
+            | sed "s|127.0.0.1:6443|${{ env.TS_IP }}:6443|g" \
+            > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
           export KUBECONFIG=$HOME/.kube/config
-        # Seu kubeconfig deve referenciar o IP Tailscale do K3s (ex.: https://100.x.y.z:6443)
+          # Substituição inline via sed para apontar ao IP Tailscale :contentReference[oaicite:5]{index=5}
 
       - name: Verificar acesso ao cluster
         run: kubectl get nodes
