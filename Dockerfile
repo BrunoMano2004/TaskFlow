@@ -1,5 +1,5 @@
 # Etapa de construção
-FROM eclipse-temurin:17-jdk-jammy AS build
+FROM --platform=linux/arm64 mcr.microsoft.com/openjdk/jdk:17-mariner AS build
 WORKDIR /app
 COPY pom.xml .
 
@@ -11,7 +11,7 @@ COPY src ./src
 RUN mvn package -DskipTests
 
 # Etapa de runtime
-FROM eclipse-temurin:17-jre-jammy AS runtime
+FROM --platform=linux/arm64 mcr.microsoft.com/openjdk/jdk:17-mariner AS runtime
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
