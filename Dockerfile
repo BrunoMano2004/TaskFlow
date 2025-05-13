@@ -1,4 +1,4 @@
-FROM --platform=linux/arm64 mcr.microsoft.com/openjdk/jdk:17-mariner AS build
+FROM --platform=linux/arm64 eclipse-temurin:17-jdk-jammy AS build
 WORKDIR /app
 COPY pom.xml .
 
