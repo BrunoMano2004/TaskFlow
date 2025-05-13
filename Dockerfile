@@ -1,4 +1,3 @@
-# Etapa de construção
 FROM --platform=linux/arm64 mcr.microsoft.com/openjdk/jdk:17-mariner AS build
 WORKDIR /app
 COPY pom.xml .
