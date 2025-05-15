@@ -1,5 +1,5 @@
 # Etapa de build
-FROM eclipse-temurin:17-jdk-jammy AS build
+FROM arm64v8/eclipse-temurin:17-jdk-jammy AS build
 WORKDIR /app
 COPY pom.xml .
 
@@ -14,7 +14,7 @@ COPY src ./src
 RUN mvn package -DskipTests
 
 # Etapa de runtime
-FROM eclipse-temurin:17-jdk-jammy AS runtime
+FROM arm64v8/eclipse-temurin:17-jdk-jammy AS runtime
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
