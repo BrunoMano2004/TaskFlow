@@ -1,4 +1,4 @@
-1) Build (mantém igual)
+## 1) Build (mantém igual)
 FROM arm32v7/maven:3.9.3-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY pom.xml .
